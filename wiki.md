@@ -1,0 +1,425 @@
+# Sprint 1 - Sistema CAMAAR
+
+## 📋 Informações do Grupo
+
+**Grupo:** Grupo 3  
+**Projeto:** CAMAAR - Sistema para Avaliação de Atividades Acadêmicas Remotas  
+**Escopo:** Avaliação de Atividades Acadêmicas
+
+### Integrantes
+
+| Nome | Matrícula | Email | GitHub |
+|------|-----------|-------|--------|
+| Mateus Santos da Silva | 190018011 | 190018011@aluno.unb.br | @avlis-mat |
+| Cauet | [Matrícula 2] | [Email 2] | @[usuario-2] |
+| Henrique | [Matrícula 3] | [Email 3] | @[usuario-3] |
+
+---
+
+## 👥 Papéis da Sprint
+
+- **Scrum Master:** Mateus
+- **Product Owner:** Henrique
+
+---
+
+## 🎯 Funcionalidades Desenvolvidas
+
+
+### Issue #103: Criar formulário de avaliação
+
+**Responsável:** Mateus
+**Pontos:** 8  
+**Status:** Cenários BDD especificados
+
+**História de Usuário:**
+> **Como** Administrador do sistema
+> **Eu quero** criar um formulário baseado em um template para as turmas que eu escolher
+> **Para que** eu possa avaliar o desempenho das turmas no semestre atual
+
+**Regras de Negócio:**
+- **RN01:** Apenas usuários com perfil de Administrador podem criar formulários
+- **RN02:** Template é obrigatório e deve existir no sistema
+- **RN03:** Pelo menos uma turma deve ser selecionada
+- **RN04:** Período de disponibilidade é obrigatório (semestre)
+- **RN05:** Professor é obrigatório
+- **RN06:** Formulário herda todas as questões do template selecionado
+- **RN07:** Título do formulário é definido como "[Avaliação] - [Nome_da_matéria] - [Semestre]"
+- **RN08:** Respostas devem ser anônimas
+- **RN09:** Usuário deve visualizar confirmação de resposta
+- **RN10:** Usuário não deve virualizar resposta
+
+#### Dependências
+
+**Pré-requisitos:**
+- Issue #102: Criar Template de Formulário (deve ser implementado primeiro)
+- Sistema de gerenciamento de turmas
+- Sistema de autenticação de usuários
+
+**Integração com:**
+- Templates de formulário (usa templates criados)
+- Cadastro de turmas (seleciona turmas existentes)
+- Sistema de permissões (valida acesso de administrador)
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Criar formulário para uma turma com sucesso
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar criar formulário sem selecionar template
+
+**Total de cenários:** 2
+---
+
+#### Campos do Formulário
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| Template | Seleção | Sim | Template base para o formulário |
+| Turmas | Múltipla seleção | Sim | Uma ou mais turmas para avaliação |
+| Semestre | Seleção | Sim | Semestre considerado |
+| Professor | Seleção | Sim | Professo da Turma |
+| Título | Texto | Sim | Título personalizado (padrão: nome do template) |
+
+#### Arquivo de Especificação
+
+📄 `features/criar_formulario_avaliacao.feature`
+
+---
+
+### Issue #102: Criar Template de Formulário
+
+**Responsável:** Mateus 
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário (Padrão Connextra)
+
+> **Como** Administrador do sistema  
+> **Eu quero** criar templates de formulários contendo questões personalizadas  
+> **Para que** eu possa gerar formulários de avaliação reutilizáveis para avaliar o desempenho das turmas
+
+#### Regras de Negócio
+
+- **RN01:** Apenas usuários com perfil de Administrador podem criar templates
+- **RN02:** Nome do template é obrigatório e deve ter entre 3 e 100 caracteres
+- **RN03:** Nome do template deve ser único no sistema
+- **RN04:** Template deve conter pelo menos 1 questão
+- **RN05:** Cada questão deve ter um enunciado obrigatório
+- **RN06:** Questões de múltipla escolha devem ter no mínimo 2 alternativas
+
+#### Tipos de Questões Suportadas
+
+| Tipo | Descrição |
+|------|-----------|
+| Dissertativa | Resposta em texto livre |
+| Múltipla Escolha | Seleção de uma alternativa entre várias opções |
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Criar template de formulário com sucesso
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar criar template sem nome
+
+**Total de cenários:** 2
+
+#### Arquivo de Especificação
+
+📄 `features/criar_template_formulario.feature`
+
+---
+
+### Issue #101: Gerar Relatório do Administrador
+
+**Responsável:** Mateus
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador do sistema  
+> **Eu quero** baixar um arquivo CSV contendo os resultados de um formulário  
+> **Para que** eu possa avaliar o desempenho das turmas
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem gerar relatórios
+- **RN02:** Relatório deve ser gerado em formato CSV
+- **RN03:** CSV deve conter cabeçalhos identificando as colunas
+- **RN04:** Dados devem seguir padrão CSV (vírgula como separador, aspas para texto com vírgula)
+- **RN05:** Nome do arquivo deve identificar o formulário e período
+- **RN06:** Possível filtrar respostas por Nome da matéria
+- **RN07:** Formulários não devem expor identificação dos respondentes
+- **RN08:** Relatório sem respostas deve gerar arquivo apenas com cabeçalhos
+
+#### Estrutura do CSV
+```csv
+ID,Data,Turma,Questão,Resposta,Tipo
+1,2025-03-10 14:30,Cálculo 1,Como você avalia?,Ótimo,Dissertativa
+2,2025-03-10 15:45,Cálculo 1,Satisfeito?,Sim,Múltipla Escolha
+3,2025-03-11 09:20,Cálculo 1,Nota de 1 a 10,8,Múltipla Escolha
+```
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes:**
+- Baixar relatório em CSV com sucesso
+
+**Cenários Tristes:**
+- Tentar baixar relatório de formulário sem respostas
+
+**Total:** 2 cenários
+
+#### Dependências
+
+- Issue #03: Criar Formulário de avaliação (deve existir formulário)
+- Issue #99: Responder Formulário (devem existir respostas)
+
+#### Arquivo
+
+📄 `features/gerar_relatorio_do_dministrador_101.feature`
+
+---
+
+### Issue #100: Cadastrar Usuários do Sistema
+
+**Responsável:** Mateus
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador do sistema  
+> **Eu quero** cadastrar participantes de turmas do SIGAA ao importar dados de usuarios novos para o sistema
+> **Para que** eles possam acessar o sistema CAMAAR
+
+**Observação Importante:** O cadastro do usuário só é efetivado após a definição da senha pelo próprio usuário.
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem enviar convites de cadastro
+- **RN02:** Usuário só existe na base após importação (Issue #98)
+- **RN03:** Cadastro é um processo em duas etapas: importação + definição de senha
+- **RN04:** Link de convite expira em 48 horas
+- **RN05:** Após definir senha, usuário está apto a fazer login
+- **RN06:** Administrador pode reenviar convite (invalida link anterior)
+- **RN07:** Sistema mantém histórico de convites enviados
+
+#### Status de Usuário
+
+| Status | Descrição |
+|--------|-----------|
+| Pendente | Importado, aguardando envio de convite |
+| Convite Enviado | Convite enviado, aguardando definição de senha |
+| Ativo | Senha definida, pode fazer login |
+| Link Expirado | Convite expirou, precisa reenviar |
+
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes:**
+- Enviar convite de cadastro para usuário importado
+
+**Cenários Tristes:**
+- Tentar definir senha com formato inválido
+
+**Depende de:**
+- Issue #17: Importar Dados do SIGAA (usuários devem ser importados primeiro)
+
+**Usado por:**
+- Sistema de autenticação (login)
+
+#### Arquivo
+
+📄 `features/cadastrar_usuarios_do_sistema.feature`
+
+---
+
+### Issue #99: Responder Formulário
+
+**Responsável:** Mateus
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Participante de uma turma  
+> **Eu quero** responder o questionário sobre a turma em que estou matriculado  
+> **Para que** eu possa submeter minha avaliação da turma
+
+#### Regras de Negócio
+
+- **RN01:** Apenas alunos autenticados podem responder formulários
+- **RN02:** Aluno só pode responder formulários das turmas em que está matriculado
+- **RN03:** Todas as questões obrigatórias devem ser respondidas
+- **RN04:** Formulário só pode ser respondido uma vez por aluno
+- **RN05:** Sistema deve pedir confirmação antes de enviar
+- **RN06:** Após envio, não é possível editar respostas
+- **RN07:** Após envio, é possível visualizar confirmação de resposta
+- **RN08:** Após envio, não é possível visualizar respostas
+
+#### Dependências
+
+**Pré-requisitos:**
+- Issue #103: Criar formulário de avaliação (deve ser implementado primeiro)
+- Sistema de gerenciamento de turmas
+- Sistema de autenticação de usuários
+
+**Integração com:**
+- Templates de formulário (usa templates criados)
+- Cadastro de turmas (seleciona turmas existentes)
+- Sistema de permissões (valida acesso de administrador)
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes:**
+- Responder formulário com sucesso
+
+**Cenários Tristes:**
+- Tentar responder sem preencher todas as questões obrigatórias
+
+**Total:** 2 cenários
+
+#### Arquivo
+
+📄 `features/responder_formulario.feature`
+
+---
+
+### Issue #98: Importar Dados do SIGAA
+
+**Responsável:** Mateus
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador do sistema  
+> **Eu quero** importar dados de turmas, matérias e participantes do SIGAA  
+> **Para que** eu possa alimentar a base de dados do sistema  
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem importar dados
+- **RN02:** Arquivos devem estar em formato JSON válido
+- **RN03:** Sistema deve verificar se dados já existem antes de importar
+- **RN04:** Dados duplicados devem ser ignorados, não sobrescritos
+- **RN05:** Campos obrigatórios devem ser validados
+- **RN07:** Sistema deve gerar relatório de importação
+- **RN08:** Tamanho máximo de arquivo: 5MB
+- **RN09:** Ordem de importação: Matérias → Turmas → Participantes
+- **RN10:** Erros não devem interromper toda a importação (processar o que for válido)
+
+#### Estrutura dos JSONs
+
+**turmas.json:**
+```json
+{
+  "turmas": [
+    {
+      "codigo": "CIC0097",
+      "nome": "BANCOS DE DADOS",
+      "turma_codigo": "TA",
+      "semestre": "2021.2",
+      "horario": "35T45"
+    }
+  ]
+}
+```
+
+
+**participantes.json:**
+```json
+{
+  "participantes": [
+    {
+      "matricula": "123456",
+      "nome": "Maria Santos",
+      "curso": "CIÊNCIA DA COMPUTAÇÃO/CIC",
+      "email": "maria@aluno.unb.br",
+      "formacao": "graduando",
+      "ocupacao": "discente",
+      "usuario": "123456",
+      "usuario_has_turma": "CIC0097"
+    }
+  ]
+}
+```
+| Entidade | Campos Obrigatórios |
+|----------|---------------------|
+| Turma | codigo, nome, turma_codigo, semestre, horario |
+| Participante | matricula, nome, curso, email, formacao, ocupacao, usuario, usuario_has_turma |
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes:**
+- Importar turmas com sucesso
+
+
+**Cenários Tristes:**
+- Tentar importar arquivo JSON inválido
+
+#### Arquivo
+
+📄 `features/importar_dados_do_sigaa_98.feature`
+
+---
+
+## 🔄 Política de Branching
+
+O grupo adota a seguinte estratégia de branches:
+```
+main (branch protegida - código do repositório original)
+  └── sprint-1 (branch da sprint - usada para Pull Request)
+      ├── feature/criar-template-formulario
+      ├── feature/[outra-funcionalidade]
+      └── feature/[outra-funcionalidade]
+```
+
+### Regras de Branching
+
+1. A branch `main` é protegida e recebe apenas Pull Requests aprovados
+2. Para cada sprint, criamos uma branch `sprint-N` 
+3. Cada desenvolvedor trabalha em sua feature branch individual
+4. Features são nomeadas seguindo o padrão: `feature/nome-da-funcionalidade`
+5. Após aprovação do PR, a branch `sprint-N` não recebe mais commits
+
+### Convenção de Commits
+```
+feat: Adiciona cenários BDD para criar template de formulário - Issue #13
+test: Adiciona cenário de validação de nome duplicado - Issue #13
+docs: Atualiza Wiki com informações da Sprint 1
+fix: Corrige enunciado do cenário de múltipla escolha - Issue #13
+```
+
+**Padrão:**
+- `feat:` Nova funcionalidade ou cenário
+- `test:` Adição ou modificação de testes
+- `docs:` Documentação
+- `fix:` Correção de erros
+- Sempre referenciar a issue (#13, #14, etc.)
+
+---
+
+## 📈 Velocity da Sprint
+
+**Pontos Planejados:** [Total de pontos de todas as issues]  
+**Pontos Concluídos:** [Total de pontos de todas as issues]  
+**Velocity da Sprint:** [Total] pontos
+
+### Distribuição de Pontos por Funcionalidade
+
+| Issue | Funcionalidade | Responsável | Pontos | Status |
+|-------|----------------|-------------|--------|--------|
+| #103 | Criar formulário de avaliação | Mateus | 8 | ✅ Especificado |
+| #102 | Criar Template de Formulário | Mateus | 5 | ✅ Especificado |
+| #101 | Gerar reltório do administrador | Mateus | 5 | ✅ Especificado |
+| #100 | Cadastrar usuários do sistema | Mateus | 5 | ✅ Especificado |
+| #99 | Responder formulário | Mateus | 5 | ✅ Especificado |
+| #98 | Importar dados do SIGAA | Mateus | 5 | ✅ Especificado |
+| **TOTAL** | | | **[Total]** | **100%** |
+
+---
