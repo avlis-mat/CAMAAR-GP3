@@ -11,7 +11,7 @@
 | Nome | Matrícula | Email | GitHub |
 |------|-----------|-------|--------|
 | Mateus Santos da Silva | 190018011 | 190018011@aluno.unb.br | @avlis-mat |
-| Cauet | [Matrícula 2] | [Email 2] | @[usuario-2] |
+| Cauet Gabriel Dias Braga | 211060577 | 211060577@aluno.unb.br | @cauet-code |
 | Henrique | [Matrícula 3] | [Email 3] | @[usuario-3] |
 
 ---
@@ -368,6 +368,248 @@ ID,Data,Turma,Questão,Resposta,Tipo
 
 ---
 
+### Issue #109: Visualização de formulários para responder
+
+**Responsável:** Cauet Gabriel Dias Braga
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Participante de uma turma  
+> **Eu quero** visualizar os formulários não respondidos das turmas em que estou matriculado  
+> **Para que** eu possa escolher qual irei responder
+
+#### Regras de Negócio
+
+- **RN01:** Apenas alunos autenticados podem visualizar formulários
+- **RN02:** Aluno só pode visualizar formulários das turmas em que está matriculado
+- **RN03:** Formulários já respondidos não devem aparecer na lista de pendentes
+- **RN04:** Formulários com prazo expirado devem ser marcados como "Prazo expirado"
+- **RN05:** Sistema deve separar formulários pendentes e respondidos em abas
+- **RN06:** Sistema deve permitir filtrar formulários por turma
+- **RN07:** Sistema deve mostrar data limite para responder cada formulário
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Visualizar formulários pendentes para responder
+2. Não visualizar formulários já respondidos
+3. Visualizar abas de formulários pendentes e respondidos
+4. Filtrar formulários por turma
+
+**Cenários Tristes (Validações e Erros):**
+1. Visualizar mensagem quando não há formulários pendentes
+2. Tentar responder formulário com prazo expirado
+3. Não visualizar formulários de turmas que não estou matriculado
+
+**Total de cenários:** 7
+
+#### Arquivo de Especificação
+
+📄 `features/visualizacao_formularios_responder_109.feature`
+
+---
+
+### Issue #110: Visualização de resultados dos formulários
+
+**Responsável:** Cauet Gabriel Dias Braga
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador  
+> **Eu quero** visualizar os formulários criados  
+> **Para que** eu possa gerar um relatório a partir das respostas
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem visualizar resultados
+- **RN02:** Sistema deve mostrar lista de todos os formulários criados
+- **RN03:** Cada formulário deve exibir número de respostas recebidas
+- **RN04:** Sistema deve permitir visualizar detalhes de cada resposta
+- **RN05:** Sistema deve permitir gerar relatório em CSV
+- **RN06:** Sistema deve permitir filtrar respostas por data
+- **RN07:** Sistema deve exibir estatísticas das respostas (média, moda, etc)
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Visualizar lista de formulários com respostas
+2. Visualizar detalhes das respostas de um formulário
+3. Gerar relatório em CSV com sucesso
+4. Filtrar respostas por data
+
+**Cenários Tristes (Validações e Erros):**
+1. Visualizar formulário sem respostas
+2. Tentar acessar relatório de formulário inexistente
+
+**Total de cenários:** 6
+
+#### Arquivo de Especificação
+
+📄 `features/visualizacao_resultados_formularios_110.feature`
+
+---
+
+### Issue #111: Visualização dos templates criados
+
+**Responsável:** Cauet Gabriel Dias Braga
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador  
+> **Eu quero** visualizar os templates criados  
+> **Para que** eu possa editar e/ou deletar um template que eu criei
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem visualizar templates
+- **RN02:** Sistema deve exibir lista de todos os templates criados
+- **RN03:** Cada template deve mostrar nome, quantidade de questões e data de criação
+- **RN04:** Sistema deve permitir visualizar detalhes completos de um template
+- **RN05:** Sistema deve permitir pesquisar templates por nome
+- **RN06:** Sistema deve exibir opções de "Editar" e "Deletar" para cada template
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Visualizar lista de templates com sucesso
+2. Visualizar detalhes de um template
+3. Pesquisar templates por nome
+
+**Cenários Tristes (Validações e Erros):**
+1. Visualizar templates quando não há nenhum criado
+2. Tentar visualizar template deletado
+
+**Total de cenários:** 5
+
+#### Arquivo de Especificação
+
+📄 `features/visualizacao_templates_criados_111.feature`
+
+---
+
+### Issue #112: Edição e deleção de templates
+
+**Responsável:** Cauet
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador  
+> **Eu quero** editar e/ou deletar um template que eu criei sem afetar os formulários já criados  
+> **Para que** eu possa organizar os templates existentes
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem editar/deletar templates
+- **RN02:** Apenas o criador do template pode editá-lo/deletá-lo
+- **RN03:** Edição de template não deve afetar formulários já criados
+- **RN04:** Deleção de template não deve afetar formulários já criados
+- **RN05:** Sistema deve solicitar confirmação antes de deletar
+- **RN06:** Sistema deve permitir adicionar questões ao template durante edição
+- **RN07:** Sistema deve permitir alterar nome do template
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Editar template existente com sucesso
+2. Deletar template com sucesso
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar deletar template sem confirmação
+2. Editar template removendo questões obrigatórias
+
+**Total de cenários:** 4
+
+#### Arquivo de Especificação
+
+📄 `features/edicao_delecao_templates_112.feature`
+
+---
+
+### Issue #113: Criação de formulário para docentes ou dicentes
+
+**Responsável:** Cauet Gabriel Dias Braga
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador  
+> **Eu quero** escolher criar um formulário para os docentes ou os dicentes de uma turma  
+> **Para que** eu possa avaliar o desempenho de uma matéria
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem criar formulários
+- **RN02:** Tipo de formulário (Docentes/Dicentes) é obrigatório
+- **RN03:** Turma é obrigatória
+- **RN04:** Template é obrigatório
+- **RN05:** Formulário para docentes deve estar disponível apenas para professores da turma
+- **RN06:** Formulário para dicentes deve estar disponível apenas para alunos da turma
+- **RN07:** Formulário deve conter todas as questões do template selecionado
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Criar formulário para docentes com sucesso
+2. Criar formulário para dicentes com sucesso
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar criar formulário sem selecionar tipo
+2. Tentar criar formulário sem selecionar turma
+3. Tentar criar formulário sem selecionar template
+
+**Total de cenários:** 5
+
+#### Arquivo de Especificação
+
+📄 `features/criacao_formulario_docentes_dicentes_113.feature`
+
+---
+
+### Issue #248: Nova issue de exemplo
+
+**Responsável:** Cauet Gabriel Dias Braga
+**Pontos:** 3  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Usuário  
+> **Eu quero** criar uma nova issue  
+> **Para que** ela apareça no meu Projects do Github
+
+#### Regras de Negócio
+
+- **RN01:** Título da issue é obrigatório
+- **RN02:** Descrição da issue é obrigatória
+- **RN03:** Issue criada deve aparecer na lista de issues do projeto
+- **RN04:** Issue deve estar visível no Projects do Github
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Criar issue com sucesso
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar criar issue sem título
+2. Tentar criar issue sem descrição
+
+**Total de cenários:** 3
+
+#### Arquivo de Especificação
+
+📄 `features/nova_issue_de_exemplo_248.feature`
+
+---
+
 ## 🔄 Política de Branching
 
 O grupo adota a seguinte estratégia de branches:
@@ -420,6 +662,12 @@ fix: Corrige enunciado do cenário de múltipla escolha - Issue #13
 | #100 | Cadastrar usuários do sistema | Mateus | 5 | ✅ Especificado |
 | #99 | Responder formulário | Mateus | 5 | ✅ Especificado |
 | #98 | Importar dados do SIGAA | Mateus | 5 | ✅ Especificado |
+| #109 | Visualização de formulários para responder | Cauet | 5 | ✅ Especificado |
+| #110 | Visualização de resultados dos formulários | Cauet | 5 | ✅ Especificado |
+| #111 | Visualização dos templates criados | Cauet | 5 | ✅ Especificado |
+| #112 | Edição e deleção de templates | Cauet | 5 | ✅ Especificado |
+| #113 | Criação de formulário para docentes ou dicentes | Cauet | 5 | ✅ Especificado |
+| #248 | Nova issue de exemplo | Cauet | 3 | ✅ Especificado |
 | **TOTAL** | | | **[Total]** | **100%** |
 
 ---
