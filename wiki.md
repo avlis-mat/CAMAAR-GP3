@@ -12,7 +12,7 @@
 |------|-----------|-------|--------|
 | Mateus Santos da Silva | 190018011 | 190018011@aluno.unb.br | @avlis-mat |
 | Cauet Gabriel Dias Braga | 211060577 | 211060577@aluno.unb.br | @cauet-code |
-| Henrique | [Matrícula 3] | [Email 3] | @[usuario-3] |
+| Henrique Carvalho Wolski | 231013627 | 231013627@aluno.unb.br | @Henrique-wolski |
 
 ---
 
@@ -610,6 +610,289 @@ ID,Data,Turma,Questão,Resposta,Tipo
 
 ---
 
+### Issue #108: Atualizar base de dados com os dados do SIGAA
+
+**Responsável:** Henrique
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador do sistema  
+> **Eu quero** atualizar a base de dados já existente com os dados atuais do SIGAA  
+> **Para que** eu possa corrigir a base de dados do sistema
+
+#### Regras de Negócio
+
+- **RN01:** Apenas administradores podem atualizar a base de dados
+- **RN02:** Sistema deve conectar ao SIGAA para obter dados atualizados
+- **RN03:** Dados existentes devem ser atualizados com informações mais recentes
+- **RN04:** Novos registros devem ser adicionados se existirem no SIGAA
+- **RN05:** Sistema deve gerar relatório de atualização mostrando alterações
+- **RN06:** Atualização deve solicitar confirmação antes de executar
+- **RN07:** Dados inválidos não devem interromper toda a atualização
+- **RN08:** Sistema deve tratar erros de conexão com SIGAA
+- **RN09:** Link de atualização deve expirar após 24 horas (se aplicável)
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Atualizar base de dados com sucesso
+2. Atualizar base de dados sem alterações
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar atualizar quando SIGAA está indisponível
+2. Tentar atualizar sem confirmação
+3. Atualização parcial devido a dados inválidos
+
+**Total de cenários:** 5
+
+#### Dependências
+
+**Pré-requisitos:**
+- Issue #98: Importar Dados do SIGAA (deve existir base de dados inicial)
+- Sistema de autenticação de administradores
+
+**Integração com:**
+- Sistema de importação do SIGAA (usa mesma estrutura de dados)
+- Base de dados do sistema (atualiza registros existentes)
+
+#### Arquivo de Especificação
+
+📄 `features/atualizar_bd_SIGAA.feature`
+
+---
+
+### Issue #107: Redefinição de senha (Bonus)
+
+**Responsável:** Henrique
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Usuário do sistema  
+> **Eu quero** redefinir uma senha para o meu usuário a partir do e-mail recebido após a solicitação da troca de senha  
+> **Para que** eu possa recuperar o meu acesso ao sistema
+
+#### Regras de Negócio
+
+- **RN01:** Usuário deve solicitar redefinição através do link "Esqueci minha senha"
+- **RN02:** Sistema deve validar se o email existe no sistema
+- **RN03:** Link de redefinição deve ser enviado por email
+- **RN04:** Link de redefinição expira em 24 horas
+- **RN05:** Token de redefinição deve ser único e seguro
+- **RN06:** Nova senha deve seguir critérios de segurança (mínimo 6 caracteres)
+- **RN07:** Confirmação de senha deve coincidir com a nova senha
+- **RN08:** Sistema deve permitir redefinição usando email ou matrícula
+- **RN09:** Após redefinição bem-sucedida, usuário deve ser redirecionado para login
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Solicitar redefinição de senha com email válido
+2. Redefinir senha com token válido
+3. Redefinir senha usando matrícula
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar solicitar redefinição com email inexistente
+2. Tentar redefinir senha com token inválido
+3. Tentar redefinir senha com senhas não coincidentes
+4. Tentar redefinir senha com senha fraca
+5. Tentar usar link de redefinição expirado
+
+**Total de cenários:** 8
+
+#### Dependências
+
+**Pré-requisitos:**
+- Sistema de cadastro de usuários
+- Sistema de envio de emails
+- Sistema de autenticação
+
+**Integração com:**
+- Sistema de login (após redefinição, usuário pode fazer login)
+- Sistema de cadastro (usa mesma estrutura de usuários)
+
+#### Arquivo de Especificação
+
+📄 `features/redefinir_senha.feature`
+
+---
+
+### Issue #106: Sistema de gerenciamento por departamento (Bonus)
+
+**Responsável:** Henrique
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Administrador do sistema  
+> **Eu quero** gerenciar somente as turmas do departamento o qual eu pertenço  
+> **Para que** eu possa avaliar o desempenho das turmas no semestre atual
+
+#### Regras de Negócio
+
+- **RN01:** Administrador deve estar associado a um departamento
+- **RN02:** Administrador só pode visualizar turmas do seu departamento
+- **RN03:** Administrador só pode criar formulários para turmas do seu departamento
+- **RN04:** Administrador só pode visualizar resultados de turmas do seu departamento
+- **RN05:** Sistema deve filtrar automaticamente por departamento do administrador
+- **RN06:** Tentativas de acesso a turmas de outros departamentos devem ser bloqueadas
+- **RN07:** Sistema deve exibir filtro indicando o departamento atual
+- **RN08:** Administrador pode filtrar turmas por semestre dentro do seu departamento
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Visualizar apenas turmas do meu departamento
+2. Criar formulário apenas para turmas do meu departamento
+3. Visualizar resultados apenas de turmas do meu departamento
+4. Filtrar turmas por semestre dentro do meu departamento
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar acessar turma de outro departamento
+2. Visualizar mensagem quando não há turmas no meu departamento
+3. Tentar criar formulário para turma de outro departamento
+
+**Total de cenários:** 7
+
+#### Dependências
+
+**Pré-requisitos:**
+- Sistema de autenticação de administradores
+- Sistema de associação de administradores a departamentos
+- Sistema de gerenciamento de turmas
+
+**Integração com:**
+- Sistema de criação de formulários (filtra turmas por departamento)
+- Sistema de visualização de resultados (filtra por departamento)
+- Sistema de importação do SIGAA (associa departamentos)
+
+#### Arquivo de Especificação
+
+📄 `features/sistema_gerenciamento_por_departamento.feature`
+
+---
+
+### Issue #105: Sistema de definição de senha
+
+**Responsável:** Henrique
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Usuário do sistema  
+> **Eu quero** definir uma senha para o meu usuário a partir do e-mail do sistema de solicitação de cadastro  
+> **Para que** eu possa acessar o sistema
+
+#### Regras de Negócio
+
+- **RN01:** Usuário deve ser importado do SIGAA antes de receber convite
+- **RN02:** Link de definição de senha deve ser enviado por email após importação
+- **RN03:** Link de definição de senha expira em 48 horas
+- **RN04:** Token de definição deve ser único e seguro
+- **RN05:** Senha deve seguir critérios de segurança (mínimo 6 caracteres)
+- **RN06:** Confirmação de senha deve coincidir com a senha definida
+- **RN07:** Após definir senha, usuário está apto a fazer login
+- **RN08:** Usuário que já possui senha não pode usar link de definição
+- **RN09:** Todos os campos são obrigatórios
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Definir senha com sucesso através do link do email
+2. Definir senha usando matrícula no link
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar definir senha com link inválido
+2. Tentar definir senha com senhas não coincidentes
+3. Tentar definir senha com senha muito curta
+4. Tentar definir senha com campos vazios
+5. Tentar usar link de definição de senha expirado
+6. Tentar definir senha para usuário que já possui senha
+
+**Total de cenários:** 8
+
+#### Dependências
+
+**Pré-requisitos:**
+- Issue #98: Importar Dados do SIGAA (usuários devem ser importados primeiro)
+- Issue #100: Cadastrar Usuários do Sistema (convite deve ser enviado)
+- Sistema de envio de emails
+
+**Usado por:**
+- Sistema de login (usuário precisa definir senha antes de fazer login)
+
+#### Arquivo de Especificação
+
+📄 `features/sistema_definir_senha.feature`
+
+---
+
+### Issue #104: Sistema de Login
+
+**Responsável:** Henrique
+**Pontos:** 5  
+**Status:** Cenários BDD especificados
+
+#### História de Usuário
+
+> **Como** Usuário do sistema  
+> **Eu quero** acessar o sistema utilizando um e-mail ou matrícula e uma senha já cadastrada  
+> **Para que** eu possa responder formulários ou gerenciar o sistema
+
+**Observação:** Quando o Usuário logado for um admin, deve-se mostrar a opção de gerenciamento no menu lateral.
+
+#### Regras de Negócio
+
+- **RN01:** Usuário deve ter senha definida para fazer login
+- **RN02:** Sistema deve aceitar email ou matrícula como identificador
+- **RN03:** Senha deve ser validada corretamente
+- **RN04:** Tentativas de login inválidas devem mostrar mensagem de erro genérica
+- **RN05:** Após login bem-sucedido, usuário deve ser redirecionado para página inicial
+- **RN06:** Administradores devem ver opção "Gerenciamento" no menu lateral
+- **RN07:** Usuários comuns não devem ver opção "Gerenciamento" no menu lateral
+- **RN08:** Todos os campos são obrigatórios
+- **RN09:** Sistema deve manter sessão do usuário após login
+
+#### Cenários BDD Implementados
+
+**Cenários Felizes (Caminhos de Sucesso):**
+1. Fazer login com email e senha corretos
+2. Fazer login com matrícula e senha corretos
+3. Administrador visualiza opção de gerenciamento no menu
+4. Usuário comum não visualiza opção de gerenciamento
+
+**Cenários Tristes (Validações e Erros):**
+1. Tentar fazer login com email inexistente
+2. Tentar fazer login com senha incorreta
+3. Tentar fazer login com matrícula inexistente
+4. Tentar fazer login com campos vazios
+5. Tentar fazer login com usuário que ainda não definiu senha
+
+**Total de cenários:** 9
+
+#### Dependências
+
+**Pré-requisitos:**
+- Issue #105: Sistema de definição de senha (usuário deve ter senha definida)
+- Sistema de autenticação
+- Sistema de sessões
+
+**Integração com:**
+- Sistema de gerenciamento (mostra opção para administradores)
+- Sistema de formulários (usuário precisa estar autenticado)
+- Sistema de permissões (define acesso baseado em perfil)
+
+#### Arquivo de Especificação
+
+📄 `features/sistema_login.feature`
+
+---
+
 ## 🔄 Política de Branching
 
 O grupo adota a seguinte estratégia de branches:
@@ -648,9 +931,9 @@ fix: Corrige enunciado do cenário de múltipla escolha - Issue #13
 
 ## 📈 Velocity da Sprint
 
-**Pontos Planejados:** [Total de pontos de todas as issues]  
-**Pontos Concluídos:** [Total de pontos de todas as issues]  
-**Velocity da Sprint:** [Total] pontos
+**Pontos Planejados:** 86  
+**Pontos Concluídos:** 86  
+**Velocity da Sprint:** 86 pontos
 
 ### Distribuição de Pontos por Funcionalidade
 
@@ -668,6 +951,11 @@ fix: Corrige enunciado do cenário de múltipla escolha - Issue #13
 | #112 | Edição e deleção de templates | Cauet | 5 | ✅ Especificado |
 | #113 | Criação de formulário para docentes ou dicentes | Cauet | 5 | ✅ Especificado |
 | #248 | Nova issue de exemplo | Cauet | 3 | ✅ Especificado |
-| **TOTAL** | | | **[Total]** | **100%** |
+| #108 | Atualizar base de dados com os dados do SIGAA | Henrique | 5 | ✅ Especificado |
+| #107 | Redefinição de senha (Bonus) | Henrique | 5 | ✅ Especificado |
+| #106 | Sistema de gerenciamento por departamento (Bonus) | Henrique | 5 | ✅ Especificado |
+| #105 | Sistema de definição de senha | Henrique | 5 | ✅ Especificado |
+| #104 | Sistema de Login | Henrique | 5 | ✅ Especificado |
+| **TOTAL** | | | **86** | **100%** |
 
 ---
