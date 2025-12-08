@@ -1,10 +1,14 @@
 FactoryBot.define do
   factory :modelo do
-    nome { "MyString" }
-    descricao { "MyText" }
-    usuario { nil }
+    sequence(:nome) { |n| "Modelo #{n}" }
+    descricao { "Descrição do modelo" }
+    association :usuario, factory: [:usuario, :professor]
     versao { 1 }
-    agrupamento { 1 }
-    status { "MyString" }
+    agrupamento { nil }
+    status { "ativo" }
+
+    trait :inativo do
+      status { 'inativo' }
+    end
   end
 end

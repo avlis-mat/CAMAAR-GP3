@@ -1,11 +1,24 @@
 FactoryBot.define do
   factory :usuario do
-    matricula { "MyString" }
-    nome { "MyString" }
-    email { "MyString" }
-    password_digest { "MyString" }
-    tipo { "MyString" }
-    departamento { "MyString" }
-    status { "MyString" }
+    sequence(:matricula) { |n| format('%09d', 100_000_000 + n) }
+    sequence(:nome) { |n| "Usuário #{n}" }
+    sequence(:email) { |n| "usuario#{n}@example.com" }
+    password { 'SenhaSegura123!' }
+    password_confirmation { 'SenhaSegura123!' }
+    tipo { 'aluno' }
+    departamento { 'ENG' }
+    status { 'ativo' }
+
+    trait :administrador do
+      tipo { 'administrador' }
+    end
+
+    trait :professor do
+      tipo { 'professor' }
+    end
+
+    trait :inativo do
+      status { 'inativo' }
+    end
   end
 end

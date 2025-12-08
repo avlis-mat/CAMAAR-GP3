@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :usuario_materia do
-    usuario { nil }
-    materia { nil }
-    papel { "MyString" }
+    association :usuario
+    association :materia
+    papel { "aluno" }
+
+    trait :professor do
+      papel { "professor" }
+    end
   end
 end

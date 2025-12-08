@@ -1,10 +1,18 @@
 FactoryBot.define do
   factory :resposta do
-    formulario { nil }
-    usuario { nil }
-    questao { nil }
+    association :formulario
+    association :usuario
+    association :questao, strategy: :build
     questao_opcao { nil }
-    conteudo { "MyText" }
-    respondido_em { "2025-12-08 02:01:47" }
+    conteudo { "Resposta dissertativa" }
+    respondido_em { nil }
+
+    trait :multipla_escolha do
+      association :questao, factory: [:questao, :multipla_escolha]
+      after(:build) do |resposta|
+        resposta.questao_opcao ||= resposta.questao.questao_opcoes.first
+        resposta.conteudo = nil
+      end
+    end
   end
 end

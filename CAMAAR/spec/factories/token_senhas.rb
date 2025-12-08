@@ -1,9 +1,13 @@
 FactoryBot.define do
   factory :token_senha do
-    usuario { nil }
-    token { "MyString" }
-    tipo { "MyString" }
-    expiracao { "2025-12-08 02:06:23" }
+    association :usuario
+    token { nil }
+    tipo { "ativacao" }
+    expiracao { nil }
     usado { false }
+
+    trait :redefinicao do
+      tipo { "redefinicao" }
+    end
   end
 end

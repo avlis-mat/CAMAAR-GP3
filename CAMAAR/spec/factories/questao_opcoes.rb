@@ -1,11 +1,19 @@
 FactoryBot.define do
   factory :questao_opcao do
-    questao { nil }
-    texto { "MyText" }
+    association :questao
+    sequence(:texto) { |n| "Opção #{n}" }
     is_correta { false }
-    ordem { 1 }
+    sequence(:ordem) { |n| n + 1 }
     versao { 1 }
-    agrupamento { 1 }
-    status { "MyString" }
+    agrupamento { nil }
+    status { "ativo" }
+
+    trait :correta do
+      is_correta { true }
+    end
+
+    trait :inativa do
+      status { 'inativo' }
+    end
   end
 end
