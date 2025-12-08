@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CAMAAR</title>
+</head>
+<body>
+  <nav>
+    <% if logged_in? %>
+      <%= link_to "Início", root_path %>
+      
+      <% if current_usuario.administrador? %>
+        <%= link_to "Gerenciar", admin_path %>
+        <%= link_to "Modelos", modelos_path %>
+        <%= link_to "Relatórios", admin_relatorios_path %>
+      <% else %>
+        <%= link_to "Formulários", formularios_path %>
+      <% end %>
+      
+      <%= button_to "Sair", logout_path, method: :delete %>
+    <% else %>
+      <%= link_to "Login", login_path %>
+    <% end %>
+  </nav>
+  
+  <main>
+    <h1>Sistema de Avaliação Acadêmica</h1>
+    
+    <% if logged_in? %>
+      <section class="dashboard">
+        <h2>Bem-vindo, <%= current_usuario.nome %>!</h2>
+        
+        <% if current_usuario.administrador? %>
+          <div class="stats">
+            <div class="stat-card">
+              <h3><%= Usuario.where(status: 'pendente').count %></h3>
+              <p>Usuários Pendentes</p>
+            </div>
+            
+            <div class="stat-card">
+              <h3><%= Formulario.where(status: 'ativo').count %></h3>
+              <p>Formulários Ativos</p>
+            </div>
+            
+            <div class="stat-card">
+              <h3><%= Modelo.count %></h3>
+              <p>Templates Criados</p>
+            </div>
+          </div>
+        <% else %>
+          <div class="formularios-pendentes">
+            <h3>Formulários Pendentes</h3>
+            <% @formularios_disponiveis.each do |formulario| %>
+              <div class="formulario-card">
+                <h4><%= formulario.titulo %></h4>
+                <p>Prazo: <%= formulario.data_fim.strftime('%d/%m/%Y') %></p>
+                <%= link_to "Responder", responder_formulario_path(formulario) %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+    <% else %>
+      <section class="welcome">
+        <p>Sistema para avaliação de disciplinas da UnB</p>
+        <%= link_to "Fazer Login", login_path, class: "btn btn-primary" %>
+      </section>
+    <% end %>
+  </main>
+</body>
+</html>

@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :usuario do
     sequence(:matricula) { |n| format('%09d', 100_000_000 + n) }
-    sequence(:nome) { |n| "Usuário #{n}" }
-    sequence(:email) { |n| "usuario#{n}@example.com" }
-    password { 'SenhaSegura123!' }
-    password_confirmation { 'SenhaSegura123!' }
+    nome { Faker::Name.name }
+    sequence(:email) { |n| "usuario#{n}@unb.br" }
+    password { 'senha123' }
+    password_confirmation { 'senha123' }
     tipo { 'aluno' }
-    departamento { 'ENG' }
+    departamento { 'CIC' }
     status { 'ativo' }
 
     trait :administrador do
@@ -19,6 +19,10 @@ FactoryBot.define do
 
     trait :inativo do
       status { 'inativo' }
+    end
+
+    trait :pendente do
+      status { 'pendente' }
     end
   end
 end

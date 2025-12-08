@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "home/index"
   resources :token_senhas
   resources :respostas
   resources :formularios
@@ -20,4 +21,45 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  root 'home#index'
+  
+  # Autenticação
+  get    'login',  to: 'sessions#new'
+  post   'login',  to: 'sessions#create'
+  delete 'logout', to: 'sessions#destroy'
+  
+  get  'definir_senha/:token', to: 'usuarios#definir_senha', as: :definir_senha
+  post 'definir_senha/:token', to: 'usuarios#salvar_senha'
+  
+  get  'redefinir_senha', to: 'usuarios#redefinir_senha'
+  post 'redefinir_senha', to: 'usuarios#enviar_redefinicao'
+  
+  # Resources
+  resources :usuarios, only: [:index, :new, :create, :show]
+  
+  resources :modelos do
+    resources :questoes, only: [:new, :create, :edit, :update, :destroy]
+  end
+  
+  resources :formularios do
+    get  'responder', to: 'respostas#new'
+    post 'responder', to: 'respostas#create'
+    get  'resultados', to: 'formularios#resultados'
+  end
+  
+  resources :materias, only: [:index, :show]
+  
+  # Admin
+  namespace :admin do
+    post 'importar_sigaa', to: 'importacao#create'
+    get  'importar_sigaa', to: 'importacao#new'
+  end
+  
+  # Relatórios
+  namespace :relatorios do
+    get 'formulario/:id/csv', to: 'csv#show', as: :formulario_csv
+  end
+  
+  get "up" => "rails/health#show", as: :rails_health_check
 end
