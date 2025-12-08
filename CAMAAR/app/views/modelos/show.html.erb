@@ -1,0 +1,114 @@
+<!-- app/views/modelos/show.html.erb -->
+
+<div class="container">
+  <div class="modelo-detail">
+    <div class="page-header">
+      <div>
+        <h1><%= @modelo.nome %></h1>
+        <span class="modelo-badge modelo-badge-<%= @modelo.status %>">
+          <%= @modelo.status.humanize %>
+        </span>
+      </div>
+      
+      <div class="header-actions">
+        <% if administrador? %>
+          <%= link_to "Editar Template", edit_modelo_path(@modelo), class: "btn btn-secondary" %>
+          <%= link_to "Usar em Formulário", new_formulario_path(modelo_id: @modelo.id), class: "btn btn-primary" %>
+        <% end %>
+        <%= link_to "Voltar", modelos_path, class: "btn btn-outline" %>
+      </div>
+    </div>
+    
+    <!-- Informações do Template -->
+    <div class="info-card">
+      <h3>Informações do Template</h3>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Descrição:</label>
+          <p><%= @modelo.descricao || "Sem descrição" %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Criado por:</label>
+          <p><%= @modelo.usuario.nome %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Data de criação:</label>
+          <p><%= @modelo.created_at.strftime('%d/%m/%Y às %H:%M') %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Última atualização:</label>
+          <p><%= @modelo.updated_at.strftime('%d/%m/%Y às %H:%M') %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Versão:</label>
+          <p><%= @modelo.versao %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Total de questões:</label>
+          <p><%= @questoes.count %></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Questões -->
+    <div class="questoes-section">
+      <h3>Questões do Template</h3>
+      
+      <% if @questoes.any? %>
+        <div class="questoes-list">
+          <% @questoes.each_with_index do |questao, index| %>
+            <div class="questao-card" id="questao_<%= questao.id %>">
+              <div class="questao-header">
+                <span class="questao-numero">Questão <%= index + 1 %></span>
+                <span class="questao-tipo <%= questao.tipo %>">
+                  <%= questao.tipo_humanizado %>
+                </span>
+              </div>
+              
+              <div class="questao-body">
+                <p class="questao-texto"><%= questao.enunciado %></p>
+                
+                <!-- Opções para múltipla escolha -->
+                <% if questao.multipla_escolha? && questao.questao_opcoes.any? %>
+                  <div class="questao-opcoes">
+                    <label>Opções:</label>
+                    <ul>
+                      <% questao.questao_opcoes.order(:ordem).each do |opcao| %>
+                        <li><%= opcao.texto %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-small">
+          <p>Este template ainda não possui questões.</p>
+          <% if administrador? %>
+            <%= link_to "Adicionar Questões", edit_modelo_path(@modelo), class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Ações do rodapé -->
+    <% if administrador? %>
+      <div class="footer-actions">
+        <%= link_to "Editar Template", edit_modelo_path(@modelo), class: "btn btn-secondary" %>
+        <%= button_to "Excluir Template", 
+                      modelo_path(@modelo), 
+                      method: :delete,
+                      data: { confirm: "Tem certeza? Esta ação não pode ser desfeita." },
+                      class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<!-- app/views/modelos/new.html.erb -->
+
+<div class="container">
+  <div class="page-header">
+    <h1>Criar Novo Template</h1>
+    <%= link_to "Voltar", modelos_path, class: "btn btn-outline" %>
+  </div>
+  
+  <%= render 'form', modelo: @modelo %>
+</div>

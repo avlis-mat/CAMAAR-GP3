@@ -5,8 +5,8 @@ class Usuario < ApplicationRecord
   # Associações (adicionar depois)
   has_many :usuario_materias, dependent: :destroy
   has_many :materias, through: :usuario_materias
-  has_many :modelos_criados, class_name: 'Modelo', foreign_key: 'criador_id'
-  has_many :formularios_criados, class_name: 'Formulario', foreign_key: 'criador_id'
+  has_many :modelos, dependent: :destroy
+  has_many :formularios, dependent: :destroy
   has_many :respostas, dependent: :destroy
   has_many :token_senhas, dependent: :destroy
   

@@ -1,0 +1,13 @@
+<!-- app/views/modelos/edit.html.erb -->
+
+<div class="container">
+  <div class="page-header">
+    <h1>Editar Template</h1>
+    <div>
+      <%= link_to "Ver Template", @modelo, class: "btn btn-info" %>
+      <%= link_to "Voltar", modelos_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+  
+  <%= render 'form', modelo: @modelo %>
+</div>

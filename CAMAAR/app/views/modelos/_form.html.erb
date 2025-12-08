@@ -1,0 +1,341 @@
+<!-- app/views/modelos/_form.html.erb -->
+<!-- CORREÇÃO: JavaScript que preenche ordem corretamente -->
+
+<%= form_with(model: modelo, local: true, html: { class: "modelo-form" }) do |f| %>
+  <% if modelo.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(modelo.errors.count, "erro") %> impediram que o template fosse salvo:</h4>
+      <ul>
+        <% modelo.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+      
+      <% if @modelo && @modelo.questoes %>
+        <% @modelo.questoes.each_with_index do |questao, i| %>
+          <% if questao.errors.any? %>
+            <strong>Questão <%= i + 1 %>:</strong>
+            <ul>
+              <% questao.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Informações do Template -->
+  <div class="form-section">
+    <h3>Informações do Template</h3>
+    
+    <div class="form-group">
+      <%= f.label :nome, "Nome do Template" %>
+      <%= f.text_field :nome, class: "form-control", placeholder: "Ex: Avaliação Disciplina 1", required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :descricao, "Descrição" %>
+      <%= f.text_area :descricao, class: "form-control", rows: 3, placeholder: "Descrição opcional do template" %>
+    </div>
+    
+    <div class="form-group">
+      <%= f.label :status, "Status" %>
+      <%= f.select :status, 
+                   options_for_select([['Ativo', 'ativo'], ['Inativo', 'inativo']], modelo.status || 'ativo'),
+                   {},
+                   class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- Questões -->
+  <div class="form-section">
+    <div class="questoes-header-form">
+      <h3>Questões do Template</h3>
+      <button type="button" class="btn btn-success add-questao-btn">
+        + Adicionar Questão
+      </button>
+    </div>
+    
+    <div id="questoes-container">
+      <%= f.fields_for :questoes do |questao_form| %>
+        <%= render 'questao_fields', f: questao_form %>
+      <% end %>
+    </div>
+    
+    <p class="help-text">
+      <em>Adicione pelo menos uma questão ao template.</em>
+    </p>
+  </div>
+
+  <!-- Botões de ação -->
+  <div class="form-actions">
+    <%= f.submit modelo.new_record? ? "Criar Template" : "Atualizar Template", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", modelos_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+
+<!-- Template para novas questões -->
+<template id="questao-template">
+  <div class="questao-wrapper" data-new-record="true">
+    <div class="questao-header-edit">
+      <span class="questao-number">Questão</span>
+      <button type="button" class="btn btn-sm btn-danger remove-questao-btn">
+        Remover Questão
+      </button>
+    </div>
+    
+    <!-- ✅ CORREÇÃO: Ordem será preenchida pelo JavaScript -->
+    <input type="hidden" name="modelo[questoes_attributes][INDEX][_destroy]" value="false" class="destroy-field">
+    <input type="hidden" name="modelo[questoes_attributes][INDEX][ordem]" value="" class="ordem-field">
+    <input type="hidden" name="modelo[questoes_attributes][INDEX][versao]" value="1">
+    <input type="hidden" name="modelo[questoes_attributes][INDEX][status]" value="ativo">
+    
+    <div class="questao-fields">
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label>Texto da Questão</label>
+          <textarea name="modelo[questoes_attributes][INDEX][enunciado]" 
+                    class="form-control" 
+                    rows="2" 
+                    placeholder="Digite o texto da questão..."
+                    required></textarea>
+        </div>
+        
+        <div class="form-group col-md-4">
+          <label>Tipo de Questão</label>
+          <select name="modelo[questoes_attributes][INDEX][tipo]" class="form-control tipo-select">
+            <option value="dissertativa">Dissertativa</option>
+            <option value="multipla_escolha">Múltipla Escolha</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>
+            <input type="hidden" name="modelo[questoes_attributes][INDEX][obrigatoria]" value="0">
+            <input type="checkbox" name="modelo[questoes_attributes][INDEX][obrigatoria]" value="1">
+            Questão obrigatória
+          </label>
+        </div>
+      </div>
+      
+      <!-- Opções para múltipla escolha -->
+      <div class="opcoes-section" style="display: none;">
+        <div class="opcoes-header">
+          <label>Opções de Resposta (mínimo 2)</label>
+          <button type="button" class="btn btn-sm btn-success add-opcao-btn">
+            + Adicionar Opção
+          </button>
+        </div>
+        
+        <div class="opcoes-container">
+          <!-- Opções serão adicionadas aqui -->
+        </div>
+        
+        <p class="help-text-small">
+          <em>Questões de múltipla escolha precisam ter pelo menos 2 opções.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('✅ Formulário de modelos carregado');
+  
+  const container = document.getElementById('questoes-container');
+  const template = document.getElementById('questao-template');
+  
+  if (!container) {
+    console.error('❌ Container não encontrado!');
+    return;
+  }
+  
+  if (!template) {
+    console.error('❌ Template não encontrado!');
+    return;
+  }
+  
+  // ✅ CORREÇÃO: Função para atualizar ordem de TODAS as questões
+  function updateAllOrdens() {
+    const questoes = container.querySelectorAll('.questao-wrapper:not([style*="display: none"])');
+    console.log(`📊 Atualizando ordem de ${questoes.length} questões`);
+    
+    questoes.forEach((questao, index) => {
+      const ordem = index + 1;
+      
+      // Atualizar número visual
+      const numberSpan = questao.querySelector('.questao-number');
+      if (numberSpan) {
+        numberSpan.textContent = `Questão ${ordem}`;
+      }
+      
+      // ✅ CRÍTICO: Atualizar campo ordem
+      const ordemInput = questao.querySelector('.ordem-field');
+      if (ordemInput) {
+        ordemInput.value = ordem;
+        console.log(`  Questão ${ordem}: ordem definida como ${ordem}`);
+      }
+    });
+  }
+  
+  // Adicionar questão
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('add-questao-btn') || 
+        e.target.closest('.add-questao-btn')) {
+      e.preventDefault();
+      console.log('➕ Adicionando nova questão');
+      
+      // Usar timestamp como índice único
+      const timestamp = new Date().getTime();
+      const newQuestao = template.content.cloneNode(true);
+      
+      // Criar div temporário para manipular HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.appendChild(newQuestao);
+      
+      // Substituir INDEX pelo timestamp
+      tempDiv.innerHTML = tempDiv.innerHTML.replace(/INDEX/g, timestamp);
+      
+      // Adicionar ao container
+      container.appendChild(tempDiv.firstElementChild);
+      
+      // ✅ CRÍTICO: Atualizar ordem de todas as questões
+      updateAllOrdens();
+      
+      console.log(`✅ Questão adicionada (índice: ${timestamp})`);
+    }
+    
+    // Remover questão
+    if (e.target.classList.contains('remove-questao-btn') || 
+        e.target.closest('.remove-questao-btn')) {
+      e.preventDefault();
+      console.log('➖ Removendo questão');
+      
+      const wrapper = e.target.closest('.questao-wrapper');
+      const destroyInput = wrapper.querySelector('.destroy-field');
+      const isNewRecord = wrapper.dataset.newRecord === 'true';
+      
+      if (!isNewRecord && destroyInput) {
+        // Questão existente - marcar para destruir
+        destroyInput.value = '1';
+        wrapper.style.display = 'none';
+        console.log('  Questão marcada para destruir');
+      } else {
+        // Questão nova - remover do DOM
+        wrapper.remove();
+        console.log('  Questão removida do DOM');
+      }
+      
+      // ✅ CRÍTICO: Atualizar ordem após remover
+      updateAllOrdens();
+    }
+    
+    // Adicionar opção
+    if (e.target.classList.contains('add-opcao-btn') || 
+        e.target.closest('.add-opcao-btn')) {
+      e.preventDefault();
+      console.log('➕ Adicionando opção');
+      
+      const wrapper = e.target.closest('.questao-wrapper');
+      const opcoesContainer = wrapper.querySelector('.opcoes-container');
+      
+      // Pegar índice da questão dos inputs
+      const questaoInput = wrapper.querySelector('input[name*="questoes_attributes"]');
+      if (!questaoInput) return;
+      
+      const match = questaoInput.name.match(/\[(\d+)\]/);
+      if (!match) return;
+      
+      const questaoIndex = match[1];
+      const opcaoIndex = new Date().getTime(); // Usar timestamp para opções também
+      
+      const opcaoHtml = `
+        <div class="opcao-field">
+          <input type="text" 
+                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][texto]"
+                 class="form-control" 
+                 placeholder="Texto da opção"
+                 required>
+          <input type="hidden" 
+                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][ordem]" 
+                 value="1">
+          <input type="hidden" 
+                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][_destroy]" 
+                 value="false"
+                 class="opcao-destroy-field">
+          <button type="button" class="btn btn-sm btn-danger remove-opcao-btn">×</button>
+        </div>
+      `;
+      
+      opcoesContainer.insertAdjacentHTML('beforeend', opcaoHtml);
+      console.log(`  Opção adicionada (índice: ${opcaoIndex})`);
+    }
+    
+    // Remover opção
+    if (e.target.classList.contains('remove-opcao-btn') || 
+        e.target.closest('.remove-opcao-btn')) {
+      e.preventDefault();
+      console.log('➖ Removendo opção');
+      
+      const opcaoField = e.target.closest('.opcao-field');
+      const destroyInput = opcaoField.querySelector('.opcao-destroy-field');
+      const hasId = opcaoField.querySelector('input[name*="[id]"]');
+      
+      if (hasId && destroyInput) {
+        destroyInput.value = '1';
+        opcaoField.style.display = 'none';
+      } else {
+        opcaoField.remove();
+      }
+    }
+  });
+  
+  // Mostrar/ocultar opções baseado no tipo
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('tipo-select') || 
+        e.target.name?.includes('[tipo]')) {
+      console.log(`🔄 Tipo mudou para: ${e.target.value}`);
+      
+      const wrapper = e.target.closest('.questao-wrapper');
+      const opcoesSection = wrapper.querySelector('.opcoes-section');
+      
+      if (e.target.value === 'multipla_escolha') {
+        opcoesSection.style.display = 'block';
+        
+        // Adicionar 2 opções padrão se vazio
+        const opcoesContainer = opcoesSection.querySelector('.opcoes-container');
+        if (opcoesContainer.querySelectorAll('.opcao-field').length === 0) {
+          console.log('  Adicionando 2 opções padrão');
+          const addBtn = opcoesSection.querySelector('.add-opcao-btn');
+          addBtn.click();
+          setTimeout(() => addBtn.click(), 10);
+        }
+      } else {
+        opcoesSection.style.display = 'none';
+      }
+    }
+  });
+  
+  // ✅ INICIALIZAÇÃO: Atualizar ordem das questões existentes
+  updateAllOrdens();
+  
+  // Inicializar tipos existentes
+  document.querySelectorAll('.tipo-select').forEach(select => {
+    if (select.value === 'multipla_escolha') {
+      const wrapper = select.closest('.questao-wrapper');
+      const opcoesSection = wrapper.querySelector('.opcoes-section');
+      if (opcoesSection) {
+        opcoesSection.style.display = 'block';
+      }
+    }
+  });
+  
+  console.log('✅ JavaScript inicializado com sucesso');
+  console.log(`📊 Total de questões: ${container.querySelectorAll('.questao-wrapper').length}`);
+});
+</script>

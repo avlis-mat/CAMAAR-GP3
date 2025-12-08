@@ -1,0 +1,77 @@
+<!-- app/views/modelos/_questao_fields.html.erb -->
+<!-- CORREÇÃO: Garantir que ordem seja preenchida -->
+
+<div class="questao-wrapper" data-new-record="<%= f.object.new_record? %>">
+  <div class="questao-header-edit">
+    <span class="questao-number">Questão</span>
+    <button type="button" class="btn btn-sm btn-danger remove-questao-btn">
+      Remover Questão
+    </button>
+  </div>
+  
+  <%= f.hidden_field :_destroy, value: false, class: 'destroy-field' %>
+  <%= f.hidden_field :ordem, class: 'ordem-field' %>
+  <%= f.hidden_field :versao, value: f.object.versao || 1 %>
+  <%= f.hidden_field :status, value: f.object.status || 'ativo' %>
+  <%= f.hidden_field :id if f.object.persisted? %>
+  
+  <div class="questao-fields">
+    <div class="form-row">
+      <div class="form-group col-md-8">
+        <%= f.label :enunciado, "Texto da Questão" %>
+        <%= f.text_area :enunciado, 
+                        class: "form-control",
+                        rows: 2,
+                        placeholder: "Digite o texto da questão...",
+                        required: true %>
+        <% if f.object.errors[:enunciado].any? %>
+          <span class="error-message"><%= f.object.errors[:enunciado].join(', ') %></span>
+        <% end %>
+      </div>
+      
+      <div class="form-group col-md-4">
+        <%= f.label :tipo, "Tipo de Questão" %>
+        <%= f.select :tipo,
+                     options_for_select([
+                       ['Dissertativa', 'dissertativa'],
+                       ['Múltipla Escolha', 'multipla_escolha']
+                     ], f.object.tipo),
+                     {},
+                     class: "form-control tipo-select" %>
+      </div>
+    </div>
+    
+    <!-- Opções para múltipla escolha -->
+    <div class="opcoes-section" style="<%= f.object.tipo == 'multipla_escolha' ? '' : 'display: none;' %>">
+      <div class="opcoes-header">
+        <label>Opções de Resposta (mínimo 2)</label>
+        <button type="button" class="btn btn-sm btn-success add-opcao-btn">
+          + Adicionar Opção
+        </button>
+      </div>
+      
+      <div class="opcoes-container">
+        <%= f.fields_for :questao_opcoes do |opcao_form| %>
+          <div class="opcao-field">
+            <%= opcao_form.text_field :texto, 
+                                      class: "form-control",
+                                      placeholder: "Texto da opção",
+                                      required: (f.object.tipo == 'multipla_escolha') %>
+            <%= opcao_form.hidden_field :ordem, value: opcao_form.object.ordem || 1 %>
+            <%= opcao_form.hidden_field :_destroy, value: false, class: 'opcao-destroy-field' %>
+            <%= opcao_form.hidden_field :id if opcao_form.object.persisted? %>
+            <button type="button" class="btn btn-sm btn-danger remove-opcao-btn">×</button>
+          </div>
+        <% end %>
+      </div>
+      
+      <p class="help-text-small">
+        <em>Questões de múltipla escolha precisam ter pelo menos 2 opções.</em>
+      </p>
+      
+      <% if f.object.errors[:questao_opcoes].any? %>
+        <span class="error-message"><%= f.object.errors[:questao_opcoes].join(', ') %></span>
+      <% end %>
+    </div>
+  </div>
+</div>
