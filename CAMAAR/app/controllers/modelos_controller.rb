@@ -1,0 +1,2 @@
+class ModelosController < ApplicationController
+end

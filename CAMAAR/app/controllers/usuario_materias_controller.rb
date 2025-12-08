@@ -1,0 +1,2 @@
+class UsuarioMateriasController < ApplicationController
+end

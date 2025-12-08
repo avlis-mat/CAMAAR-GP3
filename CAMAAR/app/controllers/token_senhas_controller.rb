@@ -1,0 +1,2 @@
+class TokenSenhasController < ApplicationController
+end
