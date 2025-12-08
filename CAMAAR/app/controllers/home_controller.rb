@@ -19,9 +19,13 @@ class HomeController < ApplicationController
   
   def load_user_dashboard
     @formularios_disponiveis = Formulario
-      .disponiveis
+      .where(status: 'ativo')
+      .where('data_inicio <= ? AND data_fim >= ?', Date.today, Date.today)
       .joins(materia: :usuario_materias)
       .where(usuario_materias: { usuario: current_usuario })
-      .where.not(id: current_usuario.respostas.select(:formulario_id))
+      .where.not(id: current_usuario.respostas.select(:formulario_id).distinct)
+      .distinct
+  rescue
+    @formularios_disponiveis = []
   end
 end

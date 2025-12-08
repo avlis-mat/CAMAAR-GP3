@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "sessions/new"
+  get "sessions/create"
+  get "sessions/destroy"
   get "home/index"
   resources :token_senhas
   resources :respostas
@@ -25,9 +28,9 @@ Rails.application.routes.draw do
   root 'home#index'
   
   # Autenticação
-  get    'login',  to: 'sessions#new'
+  get    'login',  to: 'sessions#new', as: :login
   post   'login',  to: 'sessions#create'
-  delete 'logout', to: 'sessions#destroy'
+  delete 'logout', to: 'sessions#destroy', as: :logout
   
   get  'definir_senha/:token', to: 'usuarios#definir_senha', as: :definir_senha
   post 'definir_senha/:token', to: 'usuarios#salvar_senha'
@@ -43,7 +46,7 @@ Rails.application.routes.draw do
   end
   
   resources :formularios do
-    get  'responder', to: 'respostas#new'
+    get  'responder', to: 'respostas#new', as: :responder
     post 'responder', to: 'respostas#create'
     get  'resultados', to: 'formularios#resultados'
   end
@@ -52,14 +55,15 @@ Rails.application.routes.draw do
   
   # Admin
   namespace :admin do
-    post 'importar_sigaa', to: 'importacao#create'
+    get '/', to: 'admin#index', as: :root
+    resources :usuarios, only: [:index]
     get  'importar_sigaa', to: 'importacao#new'
+    post 'importar_sigaa', to: 'importacao#create'
+    get  'relatorios', to: 'relatorios#index'
   end
   
   # Relatórios
   namespace :relatorios do
     get 'formulario/:id/csv', to: 'csv#show', as: :formulario_csv
   end
-  
-  get "up" => "rails/health#show", as: :rails_health_check
 end
