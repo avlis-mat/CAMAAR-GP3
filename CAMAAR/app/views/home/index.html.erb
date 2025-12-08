@@ -1,0 +1,58 @@
+<div class="home-container">
+  <% if logged_in? %>
+    <div class="dashboard">
+      <h1>Bem-vindo, <%= current_usuario.nome %>!</h1>
+      
+      <% if current_usuario.administrador? %>
+        <div class="admin-dashboard">
+          <h2>Painel Administrativo</h2>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number"><%= @usuarios_pendentes_count %></div>
+              <div class="stat-label">Usuários Pendentes</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-number"><%= @formularios_ativos_count %></div>
+              <div class="stat-label">Formulários Ativos</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-number"><%= @modelos_count %></div>
+              <div class="stat-label">Templates Criados</div>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="user-dashboard">
+          <h2>Meus Formulários</h2>
+          
+          <% if @formularios_disponiveis.any? %>
+            <p class="info-message">
+              Você tem <%= @formularios_disponiveis.count %> formulário(s) disponível(eis).
+            </p>
+          <% else %>
+            <div class="empty-state">
+              <p class="no-formularios">Você não tem formulários pendentes.</p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <h1>CAMAAR</h1>
+        <h2>Sistema de Avaliação Acadêmica</h2>
+        <p class="lead">
+          Sistema para gerenciamento de formulários de avaliação da UnB
+        </p>
+        
+        <div class="welcome-actions">
+          <%= link_to "Fazer Login", login_path, class: "btn btn-primary btn-lg" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,11 +1,23 @@
 FactoryBot.define do
   factory :questao do
-    modelo { nil }
-    enunciado { "MyText" }
-    tipo { "MyString" }
-    ordem { 1 }
+    association :modelo
+    sequence(:enunciado) { |n| "Enunciado da questão #{n}" }
+    tipo { "dissertativa" }
+    sequence(:ordem) { |n| n + 1 }
     versao { 1 }
-    agrupamento { 1 }
-    status { "MyString" }
+    agrupamento { nil }
+    status { "ativo" }
+
+    trait :multipla_escolha do
+      tipo { 'multipla_escolha' }
+
+      after(:create) do |questao|
+        create_list(:questao_opcao, 2, questao: questao)
+      end
+    end
+
+    trait :inativo do
+      status { 'inativo' }
+    end
   end
 end

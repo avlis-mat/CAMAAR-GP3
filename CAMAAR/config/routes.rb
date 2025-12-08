@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "sessions/new"
+  get "sessions/create"
+  get "sessions/destroy"
+  get "home/index"
   resources :token_senhas
   resources :respostas
   resources :formularios
@@ -20,4 +24,46 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  root 'home#index'
+  
+  # Autenticação
+  get    'login',  to: 'sessions#new', as: :login
+  post   'login',  to: 'sessions#create'
+  delete 'logout', to: 'sessions#destroy', as: :logout
+  
+  get  'definir_senha/:token', to: 'usuarios#definir_senha', as: :definir_senha
+  post 'definir_senha/:token', to: 'usuarios#salvar_senha'
+  
+  get  'redefinir_senha', to: 'usuarios#redefinir_senha'
+  post 'redefinir_senha', to: 'usuarios#enviar_redefinicao'
+  
+  # Resources
+  resources :usuarios, only: [:index, :new, :create, :show]
+  
+  resources :modelos do
+    resources :questoes, only: [:new, :create, :edit, :update, :destroy]
+  end
+  
+  resources :formularios do
+    get  'responder', to: 'respostas#new', as: :responder
+    post 'responder', to: 'respostas#create'
+    get  'resultados', to: 'formularios#resultados'
+  end
+  
+  resources :materias, only: [:index, :show]
+  
+  # Admin
+  namespace :admin do
+    get '/', to: 'admin#index', as: :root
+    resources :usuarios, only: [:index]
+    get  'importar_sigaa', to: 'importacao#new'
+    post 'importar_sigaa', to: 'importacao#create'
+    get  'relatorios', to: 'relatorios#index'
+  end
+  
+  # Relatórios
+  namespace :relatorios do
+    get 'formulario/:id/csv', to: 'csv#show', as: :formulario_csv
+  end
 end
