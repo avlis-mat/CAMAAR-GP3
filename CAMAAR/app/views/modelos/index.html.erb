@@ -2,7 +2,7 @@
 
 <div class="container">
   <div class="page-header">
-    <h1>Templates de Formulários</h1>
+    <h1>Templates de Avaliação</h1>
     <% if administrador? %>
       <%= link_to "Criar Novo Template", new_modelo_path, class: "btn btn-primary" %>
     <% end %>
@@ -13,21 +13,22 @@
     <%= form_with(url: modelos_path, method: :get, local: true, class: "search-form") do |f| %>
       <div class="search-input-group">
         <%= f.text_field :busca, 
-                         value: params[:busca],
-                         placeholder: "Buscar templates...", 
-                         class: "form-control" %>
+                        value: params[:busca], 
+                        placeholder: "Buscar templates por nome...",
+                        class: "search-input" %>
         <%= f.submit "Buscar", class: "btn btn-secondary" %>
         <% if params[:busca].present? %>
-          <%= link_to "Limpar", modelos_path, class: "btn btn-secondary" %>
+          <%= link_to "Limpar", modelos_path, class: "btn btn-outline" %>
         <% end %>
       </div>
     <% end %>
   </div>
   
+  <!-- Resultados -->
   <% if @modelos.any? %>
     <div class="modelos-grid">
       <% @modelos.each do |modelo| %>
-        <div class="modelo-card" id="modelo_<%= modelo.id %>">
+        <div class="modelo-card">
           <div class="modelo-header">
             <h3><%= link_to modelo.nome, modelo_path(modelo) %></h3>
             <span class="modelo-badge modelo-badge-<%= modelo.status %>">
@@ -36,37 +37,36 @@
           </div>
           
           <div class="modelo-body">
-            <p class="modelo-descricao">
-              <%= truncate(modelo.descricao, length: 150) %>
+            <p class="modelo-description">
+              <%= truncate(modelo.descricao, length: 100) || "Sem descrição" %>
             </p>
             
             <div class="modelo-meta">
               <span class="meta-item">
-                <strong><%= modelo.questoes.count %></strong> questões
+                <strong>Questões:</strong> <%= modelo.questoes.count %>
               </span>
               <span class="meta-item">
-                Versão <strong><%= modelo.versao %></strong>
+                <strong>Versão:</strong> <%= modelo.versao %>
               </span>
               <span class="meta-item">
-                Criado em <%= modelo.created_at.strftime('%d/%m/%Y') %>
+                <strong>Criado:</strong> <%= modelo.created_at.strftime('%d/%m/%Y') %>
               </span>
             </div>
             
-            <p class="modelo-autor">
-              Por: <%= modelo.usuario.nome %>
-            </p>
+            <div class="modelo-creator">
+              <small>Por: <%= modelo.usuario.nome %></small>
+            </div>
           </div>
           
           <div class="modelo-actions">
-            <%= link_to "Ver Detalhes", modelo_path(modelo), class: "btn btn-sm btn-info" %>
-            
+            <%= link_to "Visualizar", modelo_path(modelo), class: "btn btn-sm btn-primary" %>
             <% if administrador? %>
               <%= link_to "Editar", edit_modelo_path(modelo), class: "btn btn-sm btn-secondary" %>
               <%= button_to "Excluir", 
-                            modelo_path(modelo), 
-                            method: :delete,
-                            data: { confirm: "Tem certeza que deseja excluir este template?" },
-                            class: "btn btn-sm btn-danger" %>
+                           modelo_path(modelo), 
+                           method: :delete,
+                           data: { confirm: "Tem certeza? Esta ação não pode ser desfeita." },
+                           class: "btn btn-sm btn-danger" %>
             <% end %>
           </div>
         </div>
@@ -77,15 +77,15 @@
     <div class="pagination-container">
       <%= paginate @modelos %>
     </div>
-    
   <% else %>
     <div class="empty-state">
-      <h3>Nenhum template encontrado</h3>
       <% if params[:busca].present? %>
-        <p>Nenhum template corresponde à busca "<%= params[:busca] %>"</p>
-        <%= link_to "Ver todos os templates", modelos_path, class: "btn btn-secondary" %>
+        <h3>Nenhum template encontrado</h3>
+        <p>Não encontramos templates com o termo "<%= params[:busca] %>".</p>
+        <%= link_to "Ver todos os templates", modelos_path, class: "btn btn-primary" %>
       <% else %>
-        <p>Ainda não há templates criados no sistema.</p>
+        <h3>Nenhum template cadastrado</h3>
+        <p>Ainda não há templates de avaliação no sistema.</p>
         <% if administrador? %>
           <%= link_to "Criar Primeiro Template", new_modelo_path, class: "btn btn-primary" %>
         <% end %>

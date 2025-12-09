@@ -34,4 +34,17 @@ class Usuario < ApplicationRecord
   def ativo?
     status == 'ativo'
   end
+
+  # Métodos para verificar tipo
+  def aluno?
+    tipo == 'aluno'
+  end
+  
+  def professor?
+    tipo == 'professor'
+  end
+  
+  def administrador?
+    tipo == 'administrador'
+  end
 end

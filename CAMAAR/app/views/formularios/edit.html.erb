@@ -1,0 +1,10 @@
+<!-- app/views/formularios/edit.html.erb -->
+
+<div class="container">
+  <div class="page-header">
+    <h1>Editar Formulário</h1>
+    <%= link_to "Voltar", formulario_path(@formulario), class: "btn btn-outline" %>
+  </div>
+  
+  <%= render 'form', formulario: @formulario %>
+</div>

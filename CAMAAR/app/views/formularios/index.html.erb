@@ -1,0 +1,166 @@
+<!-- app/views/formularios/index.html.erb -->
+<!-- VERSÃO AJUSTADA - Usando 'destinatario' (singular) -->
+
+<div class="container">
+  <div class="page-header">
+    <h1>Formulários</h1>
+    <% if administrador? %>
+      <%= link_to "Criar Novo Formulário", new_formulario_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+  
+  <!-- Filtros -->
+  <div class="filters-section">
+    <%= form_with(url: formularios_path, method: :get, local: true, class: "filters-form") do |f| %>
+      <div class="filters-row">
+        <div class="filter-group">
+          <%= f.text_field :busca, 
+                          value: params[:busca], 
+                          placeholder: "Buscar por título...",
+                          class: "filter-input" %>
+        </div>
+        
+        <div class="filter-group">
+          <%= f.select :status,
+                      options_for_select([
+                        ['Todos os status', ''],
+                        ['Rascunho', 'rascunho'],
+                        ['Ativo', 'ativo'],
+                        ['Inativo', 'inativo'],
+                        ['Encerrado', 'encerrado']
+                      ], params[:status]),
+                      {},
+                      class: "filter-select" %>
+        </div>
+        
+        <% if administrador? %>
+          <div class="filter-group">
+            <%= f.collection_select :materia_id,
+                                   Materia.order(:nome),
+                                   :id,
+                                   :nome,
+                                   { prompt: 'Todas as matérias', selected: params[:materia_id] },
+                                   class: "filter-select" %>
+          </div>
+        <% end %>
+        
+        <div class="filter-actions">
+          <%= f.submit "Filtrar", class: "btn btn-secondary" %>
+          <% if params[:busca].present? || params[:status].present? || params[:materia_id].present? %>
+            <%= link_to "Limpar", formularios_path, class: "btn btn-outline" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Lista de Formulários -->
+  <% if @formularios.any? %>
+    <div class="formularios-grid">
+      <% @formularios.each do |formulario| %>
+        <div class="formulario-card">
+          <div class="formulario-header">
+            <h3><%= link_to formulario.titulo, formulario_path(formulario) %></h3>
+            <span class="formulario-badge <%= formulario.status_badge_class %>">
+              <%= formulario.status_humanizado %>
+            </span>
+          </div>
+          
+          <div class="formulario-body">
+            <div class="formulario-template">
+              <strong>Template:</strong> 
+              <%= link_to formulario.modelo.nome, modelo_path(formulario.modelo) %>
+            </div>
+            
+            <% if formulario.materia.present? %>
+              <div class="formulario-materia">
+                <strong>Matéria:</strong> <%= formulario.materia.nome %>
+              </div>
+            <% end %>
+            
+            <div class="formulario-periodo">
+              <strong>Período:</strong>
+              <%= formulario.data_inicio.strftime('%d/%m/%Y') %> a 
+              <%= formulario.data_fim.strftime('%d/%m/%Y') %>
+              
+              <% if formulario.vigente? %>
+                <span class="periodo-badge vigente">Vigente</span>
+              <% elsif formulario.futuro? %>
+                <span class="periodo-badge futuro">Futuro</span>
+              <% elsif formulario.expirado? %>
+                <span class="periodo-badge expirado">Expirado</span>
+              <% end %>
+            </div>
+            
+            <div class="formulario-destinatarios">
+              <strong>Destinatários:</strong> <%= formulario.destinatario_humanizado %>
+            </div>
+            
+            <% if administrador? %>
+              <div class="formulario-stats">
+                <div class="stat-item">
+                  <span class="stat-value"><%= formulario.total_respostas %></span>
+                  <span class="stat-label">Respostas</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value"><%= formulario.taxa_resposta %>%</span>
+                  <span class="stat-label">Taxa</span>
+                </div>
+              </div>
+            <% end %>
+            
+            <div class="formulario-creator">
+              <small>Por: <%= formulario.usuario.nome %> em <%= formulario.created_at.strftime('%d/%m/%Y') %></small>
+            </div>
+          </div>
+          
+          <div class="formulario-actions">
+            <%= link_to "Visualizar", formulario_path(formulario), class: "btn btn-sm btn-primary" %>
+            
+            <% if administrador? %>
+              <%= link_to "Editar", edit_formulario_path(formulario), class: "btn btn-sm btn-secondary" %>
+              
+              <% if formulario.rascunho? %>
+                <%= button_to "Ativar", 
+                             ativar_formulario_path(formulario),
+                             method: :patch,
+                             class: "btn btn-sm btn-success" %>
+              <% elsif formulario.ativo? %>
+                <%= button_to "Encerrar",
+                             encerrar_formulario_path(formulario),
+                             method: :patch,
+                             data: { confirm: "Tem certeza que deseja encerrar este formulário?" },
+                             class: "btn btn-sm btn-warning" %>
+              <% end %>
+            <% elsif aluno? && formulario.pode_responder?(current_usuario) %>
+              <% if formulario.ja_respondeu?(current_usuario) %>
+                <span class="btn btn-sm btn-success disabled">✓ Respondido</span>
+              <% else %>
+                <%= link_to "Responder", responder_formulario_path(formulario), class: "btn btn-sm btn-success" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Paginação -->
+    <div class="pagination-container">
+      <%= paginate @formularios %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <% if params[:busca].present? || params[:status].present? || params[:materia_id].present? %>
+        <h3>Nenhum formulário encontrado</h3>
+        <p>Não encontramos formulários com os filtros aplicados.</p>
+        <%= link_to "Ver todos os formulários", formularios_path, class: "btn btn-primary" %>
+      <% else %>
+        <h3>Nenhum formulário cadastrado</h3>
+        <p>Ainda não há formulários no sistema.</p>
+        <% if administrador? %>
+          <%= link_to "Criar Primeiro Formulário", new_formulario_path, class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

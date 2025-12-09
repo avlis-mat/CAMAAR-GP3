@@ -1,0 +1,228 @@
+<!-- app/views/formularios/show.html.erb -->
+
+<div class="container">
+  <div class="formulario-detail">
+    <div class="page-header">
+      <div>
+        <h1><%= @formulario.titulo %></h1>
+        <span class="formulario-badge <%= @formulario.status_badge_class %>">
+          <%= @formulario.status_humanizado %>
+        </span>
+        
+        <% if @formulario.vigente? %>
+          <span class="periodo-badge vigente">Vigente</span>
+        <% elsif @formulario.futuro? %>
+          <span class="periodo-badge futuro">Inicia em <%= @formulario.data_inicio.strftime('%d/%m/%Y') %></span>
+        <% elsif @formulario.expirado? %>
+          <span class="periodo-badge expirado">Expirado em <%= @formulario.data_fim.strftime('%d/%m/%Y') %></span>
+        <% end %>
+      </div>
+      
+      <div class="header-actions">
+        <% if administrador? %>
+          <%= link_to "Editar", edit_formulario_path(@formulario), class: "btn btn-secondary" %>
+          
+          <% if @formulario.rascunho? %>
+            <%= button_to "Ativar Formulário", 
+                         ativar_formulario_path(@formulario),
+                         method: :patch,
+                         class: "btn btn-success" %>
+          <% elsif @formulario.ativo? %>
+            <%= button_to "Encerrar Formulário",
+                         encerrar_formulario_path(@formulario),
+                         method: :patch,
+                         data: { confirm: "Tem certeza que deseja encerrar este formulário?" },
+                         class: "btn btn-warning" %>
+          <% end %>
+          
+          <%# link_to "Ver Respostas", respostas_formulario_path(@formulario), class: "btn btn-primary" %>
+        <% elsif aluno? && @formulario.pode_responder?(current_usuario) %>
+          <% if @ja_respondeu %>
+            <%= link_to "Ver Minha Resposta", resposta_path(@minha_resposta), class: "btn btn-primary" %>
+          <% else %>
+            <%# link_to "Responder Formulário", responder_formulario_path(@formulario), class: "btn btn-success" %>
+          <% end %>
+        <% end %>
+        
+        <%= link_to "Voltar", formularios_path, class: "btn btn-outline" %>
+      </div>
+    </div>
+    
+    <!-- Informações do Formulário -->
+    <div class="info-card">
+      <h3>Informações do Formulário</h3>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Template:</label>
+          <p><%= link_to @formulario.modelo.nome, modelo_path(@formulario.modelo) %></p>
+        </div>
+        
+        <% if @formulario.materia.present? %>
+          <div class="info-item">
+            <label>Matéria:</label>
+            <p><%= @formulario.materia.nome %></p>
+          </div>
+        <% end %>
+        
+        <div class="info-item">
+          <label>Período:</label>
+          <p>
+            <%= @formulario.data_inicio.strftime('%d/%m/%Y') %> a 
+            <%= @formulario.data_fim.strftime('%d/%m/%Y') %>
+          </p>
+        </div>
+        
+        <div class="info-item">
+          <label>Destinatários:</label>
+          <p><%= @formulario.destinatarios_humanizado %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Criado por:</label>
+          <p><%= @formulario.usuario.nome %></p>
+        </div>
+        
+        <div class="info-item">
+          <label>Data de criação:</label>
+          <p><%= @formulario.created_at.strftime('%d/%m/%Y às %H:%M') %></p>
+        </div>
+      </div>
+      
+      <% if @formulario.instrucoes.present? %>
+        <div class="info-item full-width">
+          <label>Instruções:</label>
+          <p><%= simple_format(@formulario.instrucoes) %></p>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Estatísticas (Admin) -->
+    <% if administrador? %>
+      <div class="stats-card">
+        <h3>Estatísticas</h3>
+        
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @total_respostas %></div>
+              <div class="stat-label">Respostas Recebidas</div>
+            </div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @total_destinatarios %></div>
+              <div class="stat-label">Total de Destinatários</div>
+            </div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @taxa_resposta %>%</div>
+              <div class="stat-label">Taxa de Resposta</div>
+            </div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-icon">❓</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @questoes.count %></div>
+              <div class="stat-label">Total de Questões</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Preview das Questões -->
+    <div class="questoes-section">
+      <h3>Questões do Formulário</h3>
+      
+      <% if @questoes.any? %>
+        <div class="questoes-list">
+          <% @questoes.each_with_index do |questao, index| %>
+            <div class="questao-card" id="questao_<%= questao.id %>">
+              <div class="questao-header">
+                <span class="questao-numero">Questão <%= index + 1 %></span>
+                <span class="questao-tipo <%= questao.tipo %>">
+                  <%= questao.tipo_humanizado %>
+                </span>
+              </div>
+              
+              <div class="questao-body">
+                <p class="questao-texto"><%= questao.enunciado %></p>
+                
+                <!-- Opções para múltipla escolha -->
+                <% if questao.multipla_escolha? && questao.questao_opcoes.any? %>
+                  <div class="questao-opcoes">
+                    <label>Opções:</label>
+                    <ul>
+                      <% questao.questao_opcoes.order(:ordem).each do |opcao| %>
+                        <li><%= opcao.texto %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-small">
+          <p>Este formulário não possui questões.</p>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Status do Usuário (Aluno) -->
+    <% if aluno? %>
+      <div class="user-status-card">
+        <% if @ja_respondeu %>
+          <div class="status-success">
+            <h3>✓ Você já respondeu este formulário</h3>
+            <p>Resposta enviada em: <%= @minha_resposta.created_at.strftime('%d/%m/%Y às %H:%M') %></p>
+            <%= link_to "Ver Minha Resposta", resposta_path(@minha_resposta), class: "btn btn-primary" %>
+          </div>
+        <% elsif @formulario.pode_responder?(current_usuario) %>
+          <div class="status-pending">
+            <h3>📝 Formulário disponível para resposta</h3>
+            <p>Prazo: até <%= @formulario.data_fim.strftime('%d/%m/%Y') %></p>
+            <%# link_to "Responder Agora", responder_formulario_path(@formulario), class: "btn btn-success btn-lg" %>
+          </div>
+        <% elsif @formulario.expirado? %>
+          <div class="status-expired">
+            <h3>⌛ Prazo expirado</h3>
+            <p>Este formulário não está mais disponível para resposta.</p>
+          </div>
+        <% elsif @formulario.futuro? %>
+          <div class="status-future">
+            <h3>🕐 Formulário futuro</h3>
+            <p>Este formulário estará disponível a partir de <%= @formulario.data_inicio.strftime('%d/%m/%Y') %>.</p>
+          </div>
+        <% else %>
+          <div class="status-unavailable">
+            <h3>🚫 Formulário não disponível</h3>
+            <p>Você não pode responder este formulário.</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <!-- Ações do rodapé (Admin) -->
+    <% if administrador? %>
+      <div class="footer-actions">
+        <%= link_to "Editar Formulário", edit_formulario_path(@formulario), class: "btn btn-secondary" %>
+        <%= link_to "Duplicar Formulário", duplicar_formulario_path(@formulario), method: :post, class: "btn btn-secondary" %>
+        <%= button_to "Excluir Formulário", 
+                      formulario_path(@formulario), 
+                      method: :delete,
+                      data: { confirm: "Tem certeza? Esta ação não pode ser desfeita." },
+                      class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -14,7 +14,7 @@ class Modelo < ApplicationRecord
   validates :status, presence: true, inclusion: { in: %w[ativo inativo] }
   
   # Scopes
-  scope :ativos, -> { where(status: 'ativo') }
+  scope :ativo, -> { where(status: 'ativo') }
   scope :inativos, -> { where(status: 'inativo') }
   scope :recentes, -> { order(created_at: :desc) }
   default_scope { where(status: 'ativo') }

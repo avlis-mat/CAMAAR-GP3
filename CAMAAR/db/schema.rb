@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_08_050623) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_09_015510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_050623) do
     t.string "status", default: "ativo", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "versao", default: 1, null: false
+    t.integer "agrupamento"
     t.index ["data_inicio", "data_fim"], name: "index_formularios_on_data_inicio_and_data_fim"
     t.index ["materia_id"], name: "index_formularios_on_materia_id"
     t.index ["modelo_id"], name: "index_formularios_on_modelo_id"

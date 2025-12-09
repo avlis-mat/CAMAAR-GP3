@@ -67,7 +67,7 @@
               <div class="questao-header">
                 <span class="questao-numero">Questão <%= index + 1 %></span>
                 <span class="questao-tipo <%= questao.tipo %>">
-                  <%= questao.tipo_humanizado %>
+                  <%= questao.tipo == 'dissertativa' ? 'Dissertativa' : 'Múltipla Escolha' %>
                 </span>
               </div>
               
@@ -75,7 +75,7 @@
                 <p class="questao-texto"><%= questao.enunciado %></p>
                 
                 <!-- Opções para múltipla escolha -->
-                <% if questao.multipla_escolha? && questao.questao_opcoes.any? %>
+                <% if questao.tipo == 'multipla_escolha' && questao.questao_opcoes.any? %>
                   <div class="questao-opcoes">
                     <label>Opções:</label>
                     <ul>

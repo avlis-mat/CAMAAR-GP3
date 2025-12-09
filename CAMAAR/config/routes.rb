@@ -49,6 +49,16 @@ Rails.application.routes.draw do
     get  'responder', to: 'respostas#new', as: :responder
     post 'responder', to: 'respostas#create'
     get  'resultados', to: 'formularios#resultados'
+    member do
+      patch :ativar      # Ativar formulário
+      patch :desativar   # Desativar formulário
+      patch :encerrar    # Encerrar formulário
+      post :duplicar     # Duplicar formulário
+      #get :responder     # Página para responder (aluno)
+      #get :respostas     # Ver respostas (admin)
+    end
+  
+ # resources :respostas, only: [:create, :show, :update, :destroy]
   end
   
   resources :materias, only: [:index, :show]
