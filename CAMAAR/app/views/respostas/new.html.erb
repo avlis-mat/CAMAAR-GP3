@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="page-header">
+    <%= link_to "← Voltar", formularios_path, class: "back-link" %>
+    <h1><%= @formulario.titulo %></h1>
+  </div>
+
+  <div class="alert alert-info">
+    <p><strong>Instruções:</strong> <%= @formulario.instrucoes.presence || "Responda todas as questões abaixo." %></p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <%= form_with(url: formulario_responder_path(@formulario), local: true, class: "form-respostas") do |f| %>
+        
+        <% @respostas.each_with_index do |resposta, index| %>
+          <% questao = resposta.questao %>
+          <div class="questao-item mb-4 <%= 'field_with_errors' if @erros&.include?(resposta) %>">
+            <h5>
+              Questão <%= index + 1 %>: <%= questao.enunciado %>
+              <span class="text-danger">*</span>
+            </h5>
+            
+            <% if questao.tipo == 'multipla_escolha' %>
+              <div class="opcoes-list">
+                <% questao.questao_opcoes.order(:ordem).each do |opcao| %>
+                  <div class="form-check">
+                    <%= radio_button_tag "questao_#{questao.id}", opcao.id, false, class: "form-check-input", id: "q#{questao.id}_o#{opcao.id}" %>
+                    <%= label_tag "q#{questao.id}_o#{opcao.id}", opcao.texto, class: "form-check-label" %>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="form-group">
+                <%= text_area_tag "questao_#{questao.id}", nil, rows: 4, class: "form-control", placeholder: "Sua resposta..." %>
+              </div>
+            <% end %>
+            
+            <% if @erros&.include?(resposta) %>
+              <p class="text-danger small mt-1">Esta questão é obrigatória.</p>
+            <% end %>
+          </div>
+          <hr>
+        <% end %>
+
+        <div class="form-actions mt-4">
+          <%= f.submit "Enviar Respostas", class: "btn btn-primary btn-lg", data: { confirm: "Tem certeza? Não será possível alterar as respostas depois." } %>
+          <%= link_to "Cancelar", formularios_path, class: "btn btn-secondary" %>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+

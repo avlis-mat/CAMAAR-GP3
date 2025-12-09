@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="page-header">
+    <%= link_to "← Voltar", formularios_path, class: "back-link" %>
+    <h1><%= @formulario.titulo %></h1>
+    <% if administrador? %>
+      <span class="badge badge-info">Admin View</span>
+    <% end %>
+  </div>
+
+  <div class="card details-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <h4>Detalhes da Avaliação</h4>
+          <dl class="row">
+            <dt class="col-sm-3">Matéria:</dt>
+            <dd class="col-sm-9"><%= @formulario.materia.nome %> (<%= @formulario.materia.codigo %>)</dd>
+
+            <dt class="col-sm-3">Semestre:</dt>
+            <dd class="col-sm-9"><%= @formulario.materia.semestre %></dd>
+
+            <dt class="col-sm-3">Professor:</dt>
+            <dd class="col-sm-9"><%= @formulario.materia.professor || "Não informado" %></dd>
+
+            <dt class="col-sm-3">Período:</dt>
+            <dd class="col-sm-9">
+              <%= @formulario.data_inicio.strftime("%d/%m/%Y") %> a 
+              <%= @formulario.data_fim.strftime("%d/%m/%Y") %>
+            </dd>
+
+            <% if @formulario.instrucoes.present? %>
+              <dt class="col-sm-3">Instruções:</dt>
+              <dd class="col-sm-9"><%= simple_format(@formulario.instrucoes) %></dd>
+            <% end %>
+          </dl>
+        </div>
+        
+        <div class="col-md-4 text-center action-panel">
+          <% if administrador? %>
+            <div class="admin-actions">
+              <p><strong>Gestão</strong></p>
+              <%= link_to "Ver Resultados", resultados_formulario_path(@formulario), class: "btn btn-info btn-block mb-2" %>
+              <%= button_to "Excluir Avaliação", formulario_path(@formulario), method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-danger btn-block" %>
+            </div>
+          <% else %>
+            <% if @formulario.ja_respondido_por?(current_usuario) %>
+              <div class="alert alert-success">
+                <h4>Avaliação Concluída!</h4>
+                <p>Obrigado por sua participação.</p>
+              </div>
+            <% elsif @formulario.disponivel? %>
+              <div class="student-actions">
+                <p>Esta avaliação possui <strong><%= @formulario.modelo.questoes.count %> questões</strong>.</p>
+                <p>Suas respostas serão anônimas.</p>
+                <%= link_to "Iniciar Avaliação", formulario_responder_path(@formulario), class: "btn btn-primary btn-lg btn-block" %>
+              </div>
+            <% else %>
+              <div class="alert alert-warning">
+                <h4>Indisponível</h4>
+                <p>Esta avaliação não está disponível no momento.</p>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

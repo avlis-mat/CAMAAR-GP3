@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Avaliações</h1>
+    <% if administrador? %>
+      <%= link_to "Nova Avaliação", new_formulario_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @formularios.any? %>
+    <div class="formularios-list">
+      <% @formularios.each do |formulario| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h5 class="card-title">
+                  <%= link_to formulario.titulo, formulario_path(formulario) %>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                  <%= formulario.materia.nome %> (<%= formulario.materia.codigo %>) - <%= formulario.materia.semestre %>
+                </h6>
+                <p class="card-text small">
+                  Disponível de <%= formulario.data_inicio.strftime("%d/%m/%Y") %> 
+                  até <%= formulario.data_fim.strftime("%d/%m/%Y") %>
+                </p>
+              </div>
+              
+              <div class="text-right">
+                <% if administrador? %>
+                  <div class="btn-group">
+                    <%= link_to "Resultados", resultados_formulario_path(formulario), class: "btn btn-info btn-sm" %>
+                    <%= button_to "Excluir", formulario_path(formulario), method: :delete, data: { confirm: "Tem certeza?" }, class: "btn btn-danger btn-sm" %>
+                  </div>
+                <% else %>
+                  <% if formulario.ja_respondido_por?(current_usuario) %>
+                    <span class="badge badge-success">Respondido</span>
+                  <% elsif formulario.disponivel? %>
+                    <%= link_to "Responder", formulario_responder_path(formulario), class: "btn btn-primary" %>
+                  <% else %>
+                    <span class="badge badge-secondary">Indisponível</span>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <h3>Nenhuma avaliação encontrada</h3>
+      <p>No momento não há avaliações disponíveis para você.</p>
+    </div>
+  <% end %>
+</div>
+

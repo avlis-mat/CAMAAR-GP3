@@ -1,0 +1,47 @@
+<%= form_with(model: usuario, local: true, class: "form-resource") do |f| %>
+  <% if usuario.errors.any? %>
+    <div class="error-messages">
+      <h3><%= pluralize(usuario.errors.count, "erro") %> impediram o cadastro:</h3>
+      <ul>
+        <% usuario.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :nome, "Nome Completo" %>
+    <%= f.text_field :nome, class: "form-control", placeholder: "Ex: João da Silva", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :matricula, "Matrícula" %>
+    <%= f.text_field :matricula, class: "form-control", placeholder: "Ex: 123456789", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, "E-mail Institucional" %>
+    <%= f.email_field :email, class: "form-control", placeholder: "Ex: joao@unb.br", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :tipo, "Tipo de Usuário" %>
+    <%= f.select :tipo, 
+                 options_for_select([['Aluno', 'aluno'], ['Professor', 'professor'], ['Administrador', 'administrador']], usuario.tipo), 
+                 {}, 
+                 class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :departamento, "Departamento (Opcional)" %>
+    <%= f.text_field :departamento, class: "form-control", placeholder: "Ex: Ciência da Computação" %>
+    <small class="form-text text-muted">Obrigatório apenas para professores e administradores departamentais.</small>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Cadastrar Usuário", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", usuarios_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+

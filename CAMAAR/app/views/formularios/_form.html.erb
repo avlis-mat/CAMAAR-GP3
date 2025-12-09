@@ -1,0 +1,64 @@
+<%= form_with(model: formulario, local: true, class: "form-resource") do |f| %>
+  <% if formulario.errors.any? %>
+    <div class="error-messages">
+      <h3>Erro ao criar formulário:</h3>
+      <ul>
+        <% formulario.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :titulo, "Título da Avaliação" %>
+    <%= f.text_field :titulo, class: "form-control", placeholder: "[Avaliação] - [Matéria] - [Semestre]", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :materia_id, "Turma/Matéria" %>
+    <%= f.collection_select :materia_id, @materias, :id, :nome, { prompt: "Selecione a turma..." }, { class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :modelo_id, "Template de Questões" %>
+    <%= f.collection_select :modelo_id, @modelos, :id, :nome, { prompt: "Selecione o template..." }, { class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= f.label :data_inicio, "Data de Início" %>
+      <%= f.date_field :data_inicio, class: "form-control", required: true %>
+    </div>
+    <div class="form-group col-md-6">
+      <%= f.label :data_fim, "Data de Término" %>
+      <%= f.date_field :data_fim, class: "form-control", required: true %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :destinatario, "Público Alvo" %>
+    <div class="radio-group">
+      <label class="radio-inline">
+        <%= f.radio_button :destinatario, 'todos', checked: true %> Todos da turma
+      </label>
+      <label class="radio-inline">
+        <%= f.radio_button :destinatario, 'dicentes' %> Apenas Alunos
+      </label>
+      <label class="radio-inline">
+        <%= f.radio_button :destinatario, 'docentes' %> Apenas Professores
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :instrucoes, "Instruções (Opcional)" %>
+    <%= f.text_area :instrucoes, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Criar Avaliação", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", formularios_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+

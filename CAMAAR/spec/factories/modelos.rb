@@ -20,6 +20,10 @@ FactoryBot.define do
       end
     end
     
+    transient do
+      num_questoes { 3 }
+    end
+
     after(:create) do |modelo, evaluator|
       create_list(:questao, evaluator.num_questoes, modelo: modelo)
     end

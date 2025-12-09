@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="page-header">
+    <%= link_to "← Voltar", formularios_path, class: "back-link" %>
+    <h1>Resultados: <%= @formulario.titulo %></h1>
+    <%= link_to "Exportar CSV", relatorios_formulario_csv_path(@formulario), class: "btn btn-success" %>
+  </div>
+
+  <div class="stats-overview mb-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-md-4">
+            <h3><%= @formulario.respostas.select(:usuario_id).distinct.count %></h3>
+            <small class="text-muted">Participantes</small>
+          </div>
+          <div class="col-md-4">
+            <h3><%= @formulario.respostas.count %></h3>
+            <small class="text-muted">Respostas Totais</small>
+          </div>
+          <div class="col-md-4">
+            <h3><%= ((@formulario.respostas.select(:usuario_id).distinct.count.to_f / @formulario.materia.usuario_materias.count) * 100).round(1) rescue 0 %>%</h3>
+            <small class="text-muted">Adesão da Turma</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% @formulario.modelo.questoes.order(:ordem).each do |questao| %>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5>Questão <%= questao.ordem %>: <%= questao.enunciado %></h5>
+        <span class="badge badge-secondary"><%= questao.tipo.humanize %></span>
+      </div>
+      <div class="card-body">
+        <% respostas_questao = @formulario.respostas.where(questao: questao) %>
+        
+        <% if respostas_questao.empty? %>
+          <p class="text-muted">Nenhuma resposta ainda.</p>
+        <% else %>
+          <% if questao.tipo == 'multipla_escolha' %>
+            <!-- Gráfico de barras simples com CSS -->
+            <div class="chart-container">
+              <% total = respostas_questao.count %>
+              <% questao.questao_opcoes.each do |opcao| %>
+                <% count = respostas_questao.where(questao_opcao: opcao).count %>
+                <% pct = (count.to_f / total * 100).round(1) %>
+                <div class="bar-item mb-2">
+                  <div class="d-flex justify-content-between">
+                    <span><%= opcao.texto %></span>
+                    <span><%= count %> (<%= pct %>%)</span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <%= pct %>%" aria-valuenow="<%= pct %>" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <!-- Lista de respostas dissertativas -->
+            <ul class="list-group list-group-flush">
+              <% respostas_questao.each do |resposta| %>
+                <li class="list-group-item">
+                  "<%= resposta.conteudo %>"
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+

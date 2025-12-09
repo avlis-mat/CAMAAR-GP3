@@ -2,7 +2,7 @@ class Resposta < ApplicationRecord
   belongs_to :formulario
   belongs_to :usuario
   belongs_to :questao
-  belongs_to :questao_opcao
+  belongs_to :questao_opcao, optional: true
 
   validates :usuario_id, uniqueness: { 
     scope: [:formulario_id, :questao_id],

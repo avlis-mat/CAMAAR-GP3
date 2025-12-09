@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_08_050623) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_09_013608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -100,7 +100,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_050623) do
     t.bigint "formulario_id", null: false
     t.bigint "usuario_id", null: false
     t.bigint "questao_id", null: false
-    t.bigint "questao_opcao_id", null: false
+    t.bigint "questao_opcao_id"
     t.text "conteudo"
     t.datetime "respondido_em"
     t.datetime "created_at", null: false

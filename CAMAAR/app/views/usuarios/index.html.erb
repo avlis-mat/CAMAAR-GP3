@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Usuários do Sistema</h1>
+    <% if administrador? %>
+      <%= link_to "Cadastrar Novo Usuário", new_usuario_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <!-- Busca -->
+  <div class="search-box">
+    <%= form_with(url: usuarios_path, method: :get, local: true, class: "search-form") do |f| %>
+      <div class="search-input-group">
+        <%= f.text_field :busca, 
+                         value: params[:busca],
+                         placeholder: "Buscar por nome, matrícula ou email...", 
+                         class: "form-control" %>
+        <%= f.submit "Buscar", class: "btn btn-secondary" %>
+        <% if params[:busca].present? %>
+          <%= link_to "Limpar", usuarios_path, class: "btn btn-secondary" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @usuarios.any? %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Matrícula</th>
+            <th>Email</th>
+            <th>Tipo</th>
+            <th>Departamento</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @usuarios.each do |usuario| %>
+            <tr>
+              <td><%= usuario.nome %></td>
+              <td><%= usuario.matricula %></td>
+              <td><%= usuario.email %></td>
+              <td>
+                <span class="badge badge-<%= usuario.administrador? ? 'admin' : 'user' %>">
+                  <%= usuario.tipo.humanize %>
+                </span>
+              </td>
+              <td><%= usuario.departamento || '-' %></td>
+              <td>
+                <span class="badge badge-status-<%= usuario.status %>">
+                  <%= usuario.status.humanize %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination-container">
+      <%= paginate @usuarios %>
+    </div>
+
+  <% else %>
+    <div class="empty-state">
+      <h3>Nenhum usuário encontrado</h3>
+      <% if params[:busca].present? %>
+        <p>Nenhum usuário corresponde à busca "<%= params[:busca] %>"</p>
+        <%= link_to "Ver todos os usuários", usuarios_path, class: "btn btn-secondary" %>
+      <% else %>
+        <p>Ainda não há usuários cadastrados.</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
