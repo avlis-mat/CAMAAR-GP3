@@ -164,13 +164,18 @@ class FormulariosController < ApplicationController
     case formulario.destinatario
     when 'todos'
       Usuario.count
-    when 'alunos'
-      Usuario.where(tipo: 'aluno').count
-    when 'professores'
-      Usuario.where(tipo: 'professor').count
-    when 'materia'
-      # Se tiver materia vinculada, contar alunos da materia
-      formulario.materia.present? ? formulario.materia.usuarios.where(tipo: 'aluno').count : 0
+    when 'discentes'
+      if formulario.materia.present?
+        formulario.materia.usuario_materias.alunos.count
+      else
+        Usuario.where(tipo: 'aluno').count
+      end
+    when 'docentes'
+      if formulario.materia.present?
+        formulario.materia.usuario_materias.professores.count
+      else
+        Usuario.where(tipo: 'professor').count
+      end
     else
       0
     end

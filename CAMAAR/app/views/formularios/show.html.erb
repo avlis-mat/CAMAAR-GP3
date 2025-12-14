@@ -35,7 +35,7 @@
                          class: "btn btn-warning" %>
           <% end %>
           
-          <%# link_to "Ver Respostas", respostas_formulario_path(@formulario), class: "btn btn-primary" %>
+          <%= link_to "Ver Respostas", resultados_formulario_path(@formulario), class: "btn btn-primary" %>
         <% elsif aluno? && @formulario.pode_responder?(current_usuario) %>
           <% if @ja_respondeu %>
             <%= link_to "Ver Minha Resposta", resposta_path(@minha_resposta), class: "btn btn-primary" %>
@@ -73,10 +73,21 @@
           </p>
         </div>
         
-        <div class="info-item">
-          <label>Destinatários:</label>
-          <p><%= @formulario.destinatarios_humanizado %></p>
+        <div class="info-row">
+          <div class="info-item">
+            <span class="info-label">👥 Destinatários:</span>
+            <span class="info-value">
+              <span class="<%= @formulario.destinatario_badge_class %>">
+                <%= @formulario.destinatario_humanizado %>
+              </span>
+              <br>
+              <small style="color: #6c757d; font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                <%= @formulario.destinatario_descricao %>
+              </small>
+            </span>
+          </div>
         </div>
+
         
         <div class="info-item">
           <label>Criado por:</label>

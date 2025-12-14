@@ -6,7 +6,7 @@ class Questao < ApplicationRecord
   
   accepts_nested_attributes_for :questao_opcoes,
     allow_destroy: true,
-    reject_if: :all_blank
+    reject_if: proc { |attributes| attributes['texto'].blank? }
   
   validates :enunciado, presence: true, length: { minimum: 5 }
   validates :tipo, presence: true,

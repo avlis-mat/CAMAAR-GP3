@@ -1,9 +1,10 @@
 <!-- app/views/formularios/_form.html.erb -->
+<!-- VERSÃO CORRIGIDA - Usa métodos do MODEL, não helpers -->
 
-<%= form_with(model: formulario, local: true, html: { class: "formulario-form" }) do |f| %>
+<%= form_with(model: formulario, local: true, class: 'formulario-form') do |f| %>
   <% if formulario.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(formulario.errors.count, "erro") %> impediram que o formulário fosse salvo:</h4>
+    <div class="alert alert-error">
+      <h3><%= pluralize(formulario.errors.count, "erro") %> impediram o salvamento:</h3>
       <ul>
         <% formulario.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -12,189 +13,336 @@
     </div>
   <% end %>
 
-  <!-- Informações Básicas -->
   <div class="form-section">
-    <h3>Informações Básicas</h3>
+    <h3>📋 Informações Básicas</h3>
     
     <div class="form-group">
-      <%= f.label :titulo, "Título do Formulário" %>
+      <%= f.label :modelo_id, 'Modelo/Template *', class: 'form-label' %>
+      <%= f.collection_select :modelo_id, 
+          Modelo.all, 
+          :id, 
+          :nome, 
+          { prompt: 'Selecione um modelo/template' },
+          { class: 'form-select', required: true } 
+      %>
+      <small class="form-help">Escolha o template de questões para este formulário</small>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :materia_id, 'Turma *', class: 'form-label' %>
+      <%= f.collection_select :materia_id,
+          current_usuario.administrador? ? Materia.all : Materia.do_departamento(current_usuario.departamento),
+          :id,
+          :codigo_completo,
+          { prompt: 'Selecione uma turma' },
+          { class: 'form-select', required: true }
+      %>
+      <small class="form-help">Turma que receberá este formulário</small>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :titulo, 'Título do Formulário *', class: 'form-label' %>
       <%= f.text_field :titulo, 
-                       class: "form-control", 
-                       placeholder: "Ex: Avaliação Docente - 1º Semestre 2024",
-                       required: true %>
-      <small class="help-text">Título que será exibido para os respondentes</small>
+          class: 'form-input', 
+          placeholder: 'Ex: Avaliação Semestral 2025.1',
+          required: true,
+          maxlength: 200
+      %>
+      <small class="form-help">Nome que aparecerá para os respondentes</small>
     </div>
-    
+
     <div class="form-group">
-      <%= f.label :modelo_id, "Template" %>
-      <%= f.collection_select :modelo_id,
-                             @modelos,
-                             :id,
-                             :nome,
-                             { prompt: 'Selecione um template...' },
-                             class: "form-control",
-                             required: true %>
-      <small class="help-text">Escolha o template com as questões que serão usadas</small>
-    </div>
-    
-    <div class="form-group">
-      <%= f.label :instrucoes, "Instruções" %>
-      <%= f.text_area :instrucoes,
-                     class: "form-control",
-                     rows: 4,
-                     placeholder: "Instruções opcionais para os respondentes..." %>
-      <small class="help-text">Orientações adicionais que aparecerão no topo do formulário</small>
+      <%= f.label :instrucoes, 'Instruções (opcional)', class: 'form-label' %>
+      <%= f.text_area :instrucoes, 
+          class: 'form-textarea', 
+          rows: 4,
+          placeholder: 'Instruções adicionais para os respondentes...'
+      %>
+      <small class="form-help">Orientações sobre como responder o formulário</small>
     </div>
   </div>
 
-  <!-- Período e Destinatários -->
   <div class="form-section">
-    <h3>Período e Destinatários</h3>
+    <h3>👥 Destinatários</h3>
+    
+    <div class="form-group">
+      <%= f.label :destinatario, 'Este formulário será respondido por: *', class: 'form-label' %>
+      
+      <div class="radio-group">
+        <label class="radio-option">
+          <%= f.radio_button :destinatario, 'discentes', 
+              checked: formulario.destinatario == 'discentes' || formulario.new_record?, 
+              required: true %>
+          <div class="radio-content">
+            <span class="radio-title">👨‍🎓 Alunos (Dicentes)</span>
+            <span class="radio-description">O formulário será enviado para os alunos da turma</span>
+          </div>
+        </label>
+
+        <label class="radio-option">
+          <%= f.radio_button :destinatario, 'docentes', 
+              checked: formulario.destinatario == 'docentes', 
+              required: true %>
+          <div class="radio-content">
+            <span class="radio-title">👨‍🏫 Professores (Docentes)</span>
+            <span class="radio-description">O formulário será enviado para os professores da turma</span>
+          </div>
+        </label>
+
+        <label class="radio-option">
+          <%= f.radio_button :destinatario, 'todos', 
+              checked: formulario.destinatario == 'todos', 
+              required: true %>
+          <div class="radio-content">
+            <span class="radio-title">👥 Todos (Docentes e Dicentes)</span>
+            <span class="radio-description">O formulário será enviado para todos os participantes</span>
+          </div>
+        </label>
+      </div>
+      
+      <small class="form-help">⚠️ Esta escolha não poderá ser alterada após a criação</small>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>📅 Período de Disponibilidade</h3>
     
     <div class="form-row">
-      <div class="form-group col-md-6">
-        <%= f.label :data_inicio, "Data de Início" %>
-        <%= f.date_field :data_inicio,
-                        class: "form-control",
-                        required: true,
-                        value: formulario.data_inicio || Date.current %>
-        <small class="help-text">A partir de quando o formulário estará disponível</small>
+      <div class="form-group">
+        <%= f.label :data_inicio, 'Data de Início *', class: 'form-label' %>
+        <%= f.date_field :data_inicio, 
+            class: 'form-input',
+            required: true,
+            min: Date.today
+        %>
+        <small class="form-help">Quando o formulário ficará disponível</small>
       </div>
-      
-      <div class="form-group col-md-6">
-        <%= f.label :data_fim, "Data de Término" %>
-        <%= f.date_field :data_fim,
-                        class: "form-control",
-                        required: true,
-                        value: formulario.data_fim || (Date.current + 7.days) %>
-        <small class="help-text">Até quando o formulário poderá ser respondido</small>
+
+      <div class="form-group">
+        <%= f.label :data_fim, 'Data de Término *', class: 'form-label' %>
+        <%= f.date_field :data_fim, 
+            class: 'form-input',
+            required: true,
+            min: Date.today
+        %>
+        <small class="form-help">Último dia para responder</small>
       </div>
-    </div>
-    
-    <div class="form-group">
-      <%= f.label :destinatario, "Quem pode responder?" %>
-      <%= f.select :destinatario,
-                  options_for_select([
-                    ['Todos os usuários', 'todos'],
-                    ['Apenas alunos', 'alunos'],
-                    ['Apenas professores', 'professores'],
-                    ['Alunos de uma matéria específica', 'materia']
-                  ], formulario.destinatario || 'alunos'),
-                  {},
-                  class: "form-control destinatario-select",
-                  required: true %>
-    </div>
-    
-    <div class="form-group materia-field" style="<%= formulario.destinatario == 'materia' ? '' : 'display: none;' %>">
-      <%= f.label :materia_id, "Matéria" %>
-      <%= f.collection_select :materia_id,
-                             @materias,
-                             :id,
-                             :nome,
-                             { prompt: 'Selecione uma matéria...', selected: formulario.materia_id },
-                             class: "form-control" %>
-      <small class="help-text">Apenas alunos matriculados nesta matéria poderão responder</small>
     </div>
   </div>
 
-  <!-- Status -->
   <div class="form-section">
-    <h3>Status do Formulário</h3>
+    <h3>⚙️ Configurações</h3>
     
     <div class="form-group">
-      <%= f.label :status, "Status" %>
+      <%= f.label :status, 'Status *', class: 'form-label' %>
       <%= f.select :status,
-                  options_for_select([
-                    ['Rascunho (não visível para respondentes)', 'rascunho'],
-                    ['Ativo (visível e disponível)', 'ativo'],
-                    ['Inativo (temporariamente desabilitado)', 'inativo']
-                  ], formulario.status || 'rascunho'),
-                  {},
-                  class: "form-control",
-                  required: true %>
-      <small class="help-text">
-        <strong>Dica:</strong> Crie como rascunho para revisar antes de ativar
+          [
+            ['Rascunho (não visível para alunos)', 'rascunho'],
+            ['Ativo (visível e disponível)', 'ativo'],
+            ['Encerrado (não aceita mais respostas)', 'encerrado']
+          ],
+          {},
+          { class: 'form-select', required: true }
+      %>
+      <small class="form-help">
+        <strong>Rascunho:</strong> Formulário em preparação, não visível<br>
+        <strong>Ativo:</strong> Visível e aceitando respostas<br>
+        <strong>Encerrado:</strong> Visível mas não aceita mais respostas
       </small>
     </div>
   </div>
 
-  <!-- Preview do Template -->
-  <% if formulario.modelo.present? %>
-    <div class="form-section">
-      <h3>Preview das Questões</h3>
-      
-      <div class="questoes-preview">
-        <% formulario.modelo.questoes.order(:ordem).each_with_index do |questao, index| %>
-          <div class="questao-preview-item">
-            <div class="questao-preview-header">
-              <span class="questao-numero">Questão <%= index + 1 %></span>
-              <span class="questao-tipo <%= questao.tipo %>">
-                <%= questao.tipo_humanizado %>
-              </span>
-            </div>
-            <p class="questao-texto"><%= questao.enunciado %></p>
-            
-            <% if questao.multipla_escolha? && questao.questao_opcoes.any? %>
-              <div class="questao-opcoes-preview">
-                <% questao.questao_opcoes.order(:ordem).each do |opcao| %>
-                  <div class="opcao-preview">○ <%= opcao.texto %></div>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-      
-      <small class="help-text">
-        <em>Preview das questões do template selecionado. 
-        <%= link_to "Ver template completo", modelo_path(formulario.modelo), target: "_blank" %></em>
-      </small>
-    </div>
-  <% end %>
-
-  <!-- Botões de ação -->
   <div class="form-actions">
-    <%= f.submit formulario.new_record? ? "Criar Formulário" : "Atualizar Formulário", 
-                class: "btn btn-primary" %>
-    <%= link_to "Cancelar", formularios_path, class: "btn btn-secondary" %>
+    <%= f.submit formulario.new_record? ? '✅ Criar Formulário' : '💾 Salvar Alterações', 
+        class: 'btn btn-primary' %>
+    <%= link_to '❌ Cancelar', formularios_path, class: 'btn btn-secondary' %>
   </div>
 <% end %>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('✅ Formulário de formulários carregado');
-  
-  // Mostrar/ocultar campo de matéria baseado em destinatario
-  const destinatarioSelect = document.querySelector('.destinatario-select');
-  const materiaField = document.querySelector('.materia-field');
-  
-  if (destinatarioSelect && materiaField) {
-    destinatarioSelect.addEventListener('change', function() {
-      console.log('🔄 Destinatário mudou para:', this.value);
-      
-      if (this.value === 'materia') {
-        materiaField.style.display = 'block';
-        materiaField.querySelector('select').required = true;
-        console.log('  Mostrando campo matéria');
-      } else {
-        materiaField.style.display = 'none';
-        materiaField.querySelector('select').required = false;
-        console.log('  Ocultando campo matéria');
-      }
-    });
+<style>
+.formulario-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-help {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.radio-option:hover {
+  border-color: #3498db;
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 1rem;
+  margin-top: 0.25rem;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.radio-option input[type="radio"]:checked + .radio-content {
+  color: #3498db;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+  border-color: #3498db;
+  background: #e3f2fd;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+.radio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.radio-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #2c3e50;
+}
+
+.radio-description {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.alert {
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.alert-error {
+  background: #fee;
+  border: 2px solid #fcc;
+  color: #c33;
+}
+
+.alert-error h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+}
+
+.alert-error ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.alert-error li {
+  margin: 0.25rem 0;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
   }
   
-  // Preview ao selecionar template
-  const modeloSelect = document.querySelector('select[name="formulario[modelo_id]"]');
-  if (modeloSelect) {
-    modeloSelect.addEventListener('change', function() {
-      if (this.value) {
-        console.log('📋 Template selecionado:', this.value);
-        console.log('💡 Dica: Recarregue a página para ver o preview das questões');
-      }
-    });
+  .form-section {
+    padding: 1.5rem;
   }
   
-  console.log('✅ JavaScript inicializado com sucesso');
-});
-</script>
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+</style>

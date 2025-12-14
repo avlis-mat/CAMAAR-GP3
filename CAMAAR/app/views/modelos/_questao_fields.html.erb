@@ -58,6 +58,8 @@
                                       placeholder: "Texto da opção",
                                       required: (f.object.tipo == 'multipla_escolha') %>
             <%= opcao_form.hidden_field :ordem, value: opcao_form.object.ordem || 1 %>
+            <%= opcao_form.hidden_field :versao, value: opcao_form.object.versao || 1 %>
+            <%= opcao_form.hidden_field :status, value: opcao_form.object.status || 'ativo' %>
             <%= opcao_form.hidden_field :_destroy, value: false, class: 'opcao-destroy-field' %>
             <%= opcao_form.hidden_field :id if opcao_form.object.persisted? %>
             <button type="button" class="btn btn-sm btn-danger remove-opcao-btn">×</button>

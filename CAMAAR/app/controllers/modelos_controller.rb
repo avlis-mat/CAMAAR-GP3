@@ -33,6 +33,12 @@ class ModelosController < ApplicationController
   def create
     @modelo = current_usuario.modelos.build(modelo_params)
     @modelo.versao = 1
+
+    @modelo.questoes.each_with_index do |questao, index|
+      questao.ordem = index + 1
+      questao.versao ||= 1
+      questao.status ||= 'ativo'
+    end
     
     if @modelo.save
       # Definir agrupamento como o próprio ID se não foi especificado

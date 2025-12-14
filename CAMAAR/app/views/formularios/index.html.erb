@@ -92,9 +92,10 @@
               <% end %>
             </div>
             
-            <div class="formulario-destinatarios">
-              <strong>Destinatários:</strong> <%= formulario.destinatario_humanizado %>
-            </div>
+            <strong>Destinatários:</strong>
+              <span class="<%= formulario.destinatario_badge_class %>">
+                <%= formulario.destinatario_humanizado %>
+              </span>
             
             <% if administrador? %>
               <div class="formulario-stats">

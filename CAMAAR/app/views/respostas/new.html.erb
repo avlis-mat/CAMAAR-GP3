@@ -1,0 +1,327 @@
+<%# app/views/respostas/new.html.erb %>
+
+<div class="container-resposta">
+  <%# Header com informações %>
+  <div class="resposta-header">
+    <h1>📝 <%= @formulario.titulo %></h1>
+    <div class="formulario-meta">
+      <% if @formulario.materia.present? %>
+        <span class="meta-item">📚 <%= @formulario.materia.nome %></span>
+      <% end %>
+      <span class="meta-item"><%= @formulario.destinatario_humanizado %></span>
+      <span class="meta-item">📅 Prazo: <%= @formulario.data_fim.strftime('%d/%m/%Y') %></span>
+      <span class="meta-item">📊 <%= pluralize(@questoes.count, 'questão', 'questões') %></span>
+    </div>
+    
+    <% if @formulario.instrucoes.present? %>
+      <div class="instrucoes">
+        <strong>Instruções:</strong> <%= simple_format(@formulario.instrucoes) %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Formulário %>
+  <%= form_with url: formulario_respostas_path(@formulario), method: :post, local: true, class: 'form-resposta' do |f| %>
+    
+    <div class="questoes-lista">
+      <% @questoes.each_with_index do |questao, index| %>
+        <div class="questao-box" data-questao-id="<%= questao.id %>">
+          <%# Header da questão %>
+          <div class="questao-titulo">
+            <span class="numero">Questão <%= index + 1 %></span>
+          </div>
+          
+          <%# Enunciado %>
+          <div class="questao-texto">
+            <%= simple_format(questao.enunciado) %>
+          </div>
+          
+          <%# Resposta baseada no tipo %>
+          <div class="questao-input">
+            <% if questao.tipo == 'dissertativa' %>
+              <%# Dissertativa %>
+              <%= text_area_tag "respostas[#{questao.id}][conteudo]", 
+                                @respostas_hash&.dig(questao.id.to_s, 'conteudo'),
+                                class: 'textarea-resposta',
+                                rows: 5,
+                                placeholder: 'Digite sua resposta aqui...' %>
+              
+            <% elsif questao.tipo == 'multipla_escolha' %>
+              <%# Múltipla Escolha %>
+              <div class="opcoes-radio">
+                <% questao.questao_opcoes.each do |opcao| %>
+                  <label class="opcao-label">
+                    <%= radio_button_tag "respostas[#{questao.id}][questao_opcao_id]", 
+                                         opcao.id,
+                                         false,
+                                         class: 'radio-input' %>
+                    <span class="opcao-texto"><%= opcao.texto %></span>
+                  </label>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <%# Botões %>
+    <div class="form-acoes">
+      <%= link_to "✕ Cancelar", formularios_path, class: "btn btn-secondary" %>
+      <%= f.submit "✓ Enviar Respostas", 
+                   class: "btn btn-primary",
+                   data: { confirm: 'Tem certeza que deseja enviar? Você não poderá alterar depois.' } %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.container-resposta {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.resposta-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.resposta-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.formulario-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instrucoes {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.questoes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.questao-box {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.questao-box:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.questao-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.numero {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #667eea;
+}
+
+.obrigatoria {
+  font-size: 0.85rem;
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.questao-texto {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.textarea-resposta {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.textarea-resposta:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.opcoes-radio {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.opcao-label {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.opcao-label:hover {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.opcao-label:has(.radio-input:checked) {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.radio-input {
+  width: 20px;
+  height: 20px;
+  margin: 0 1rem 0 0;
+  cursor: pointer;
+}
+
+.opcao-texto {
+  flex: 1;
+  font-size: 1rem;
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+.form-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem 0;
+  border-top: 2px solid #e9ecef;
+}
+
+.btn {
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+  .resposta-header h1 { font-size: 1.5rem; }
+  .formulario-meta { flex-direction: column; gap: 0.75rem; }
+  .questao-box { padding: 1rem; }
+  .form-acoes { flex-direction: column; }
+  .form-acoes .btn { width: 100%; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('.form-resposta');
+  
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const questoes = document.querySelectorAll('.questao-box');
+      let valido = true;
+      let primeira = null;
+      
+      questoes.forEach(questao => {
+        const textarea = questao.querySelector('.textarea-resposta');
+        const radios = questao.querySelectorAll('.radio-input');
+        
+        if (textarea && textarea.required && !textarea.value.trim()) {
+          valido = false;
+          if (!primeira) primeira = questao;
+          questao.style.borderColor = '#dc3545';
+        }
+        
+        if (radios.length > 0) {
+          const algum = Array.from(radios).some(r => r.checked);
+          const primeiro = radios[0];
+          
+          if (primeiro.required && !algum) {
+            valido = false;
+            if (!primeira) primeira = questao;
+            questao.style.borderColor = '#dc3545';
+          }
+        }
+      });
+      
+      if (!valido) {
+        e.preventDefault();
+        alert('⚠️ Por favor, responda todas as questões obrigatórias.');
+        if (primeira) primeira.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+    });
+    
+    document.querySelectorAll('.textarea-resposta, .radio-input').forEach(input => {
+      input.addEventListener('change', function() {
+        const questao = this.closest('.questao-box');
+        if (questao) questao.style.borderColor = '#e9ecef';
+      });
+    });
+  }
+});
+</script>

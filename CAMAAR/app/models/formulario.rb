@@ -14,7 +14,7 @@ class Formulario < ApplicationRecord
   validates :data_inicio, presence: true
   validates :data_fim, presence: true
   validates :destinatario, presence: true, 
-            inclusion: { in: %w[todos alunos professores materia] }
+            inclusion: { in: %w[todos discentes docentes materia] }
   validates :status, presence: true,
             inclusion: { in: %w[rascunho ativo inativo encerrado] }
   validates :versao, presence: true, numericality: { greater_than: 0 }
@@ -151,11 +151,11 @@ class Formulario < ApplicationRecord
     total_destinatarios = calcular_total_destinatarios
     return 0 if total_destinatarios == 0
     
-    (respostas.count.to_f / total_destinatarios * 100).round(1)
+    (total_respostas_usuarios.to_f / total_destinatarios * 100).round(1)
   end
   
   def total_respostas
-    respostas.count
+    total_respostas_usuarios
   end
   
   def calcular_total_destinatarios
@@ -172,6 +172,10 @@ class Formulario < ApplicationRecord
       0
     end
   end
+
+  def total_respostas_usuarios
+    respostas.select(:usuario_id).distinct.count
+  end
   
   # Verificar se usuário pode responder
   def pode_responder?(usuario)
@@ -180,13 +184,10 @@ class Formulario < ApplicationRecord
     case destinatario
     when 'todos'
       true
-    when 'alunos'
+    when 'discentes'
       usuario.aluno?
-    when 'professores'
+    when 'docentes'
       usuario.professor?
-    when 'materia'
-      materia.present? && materia.usuarios.include?(usuario) && usuario.aluno?
-    else
       false
     end
   end
@@ -205,6 +206,64 @@ class Formulario < ApplicationRecord
   def ja_respondido_por?(usuario)
     ja_respondeu?(usuario)
   end
+
+  # metodos de destinatarios
+
+  def destinatario_badge_class
+  case destinatario
+  when 'dicentes'
+    'badge badge-blue'
+  when 'docentes'
+    'badge badge-purple'
+  when 'todos'
+    'badge badge-green'
+  else
+    'badge badge-gray'
+  end
+end
+
+def destinatario_icone
+  case destinatario
+  when 'dicentes'
+    '👨‍🎓'
+  when 'docentes'
+    '👨‍🏫'
+  when 'todos'
+    '👥'
+  else
+    '❓'
+  end
+end
+
+def destinatario_texto
+  case destinatario
+  when 'dicentes'
+    'Alunos'
+  when 'docentes'
+    'Professores'
+  when 'todos'
+    'Todos'
+  else
+    destinatario.humanize
+  end
+end
+
+def destinatario_humanizado
+  "#{destinatario_icone} #{destinatario_texto}"
+end
+
+def destinatario_descricao
+  case destinatario
+  when 'dicentes'
+    'Este formulário será respondido pelos alunos da turma'
+  when 'docentes'
+    'Este formulário será respondido pelos professores da turma'
+  when 'todos'
+    'Este formulário será respondido por todos os participantes da turma'
+  else
+    'Destinatário não especificado'
+  end
+end
   
   private
   

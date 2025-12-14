@@ -548,3 +548,69 @@
 .questoes-preview::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* Badge Azul - Alunos/Dicentes */
+.badge-blue {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #90caf9;
+}
+
+.badge-blue:hover {
+  background: #bbdefb;
+  transform: scale(1.05);
+}
+
+/* Badge Roxo - Professores/Docentes */
+.badge-purple {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
+}
+
+.badge-purple:hover {
+  background: #e1bee7;
+  transform: scale(1.05);
+}
+
+/* Badge Verde - Todos */
+.badge-green {
+  background: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #81c784;
+}
+
+.badge-green:hover {
+  background: #c8e6c9;
+  transform: scale(1.05);
+}
+
+/* Badge Cinza - Padrão/Não especificado */
+.badge-gray {
+  background: #f5f5f5;
+  color: #616161;
+  border: 1px solid #e0e0e0;
+}
+
+.badge-gray:hover {
+  background: #eeeeee;
+  transform: scale(1.05);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}

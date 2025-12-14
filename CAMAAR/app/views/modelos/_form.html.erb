@@ -183,6 +183,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+  // ✅ NOVA FUNÇÃO: Adicionar opções DIRETAMENTE (sem usar click)
+  function adicionarOpcaoPadrao(wrapper, questaoIndex) {
+    console.log('➕ Adicionando opção padrão diretamente');
+    
+    const opcoesContainer = wrapper.querySelector('.opcoes-container');
+    if (!opcoesContainer) return;
+    
+    const opcaoIndex = opcoesContainer.children.length + 1;
+    
+    const opcaoHtml = `
+      <div class="opcao-field">
+      <input type="text" 
+             name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][texto]"
+             class="form-control" 
+             placeholder="Texto da opção"
+             required>
+      <input type="hidden" 
+             name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][ordem]" 
+             value="${opcaoIndex}">  # ← CORREÇÃO: Setar ordem
+      <input type="hidden" 
+             name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][versao]" 
+             value="1">
+      <input type="hidden" 
+             name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][status]" 
+             value="ativo">
+      <input type="hidden" 
+             name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][_destroy]" 
+             value="false"
+             class="opcao-destroy-field">
+      <button type="button" class="btn btn-sm btn-danger remove-opcao-btn">×</button>
+    </div>
+    `;
+    
+    opcoesContainer.insertAdjacentHTML('beforeend', opcaoHtml);
+    console.log(`  Opção adicionada diretamente`);
+  }
+  
   // Adicionar questão
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('add-questao-btn') || 
@@ -246,34 +283,19 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Pegar índice da questão dos inputs
       const questaoInput = wrapper.querySelector('input[name*="questoes_attributes"]');
-      if (!questaoInput) return;
+      if (!questaoInput) {
+        console.error('❌ Input da questão não encontrado');
+        return;
+      }
       
       const match = questaoInput.name.match(/\[(\d+)\]/);
-      if (!match) return;
+      if (!match) {
+        console.error('❌ Não conseguiu extrair índice da questão');
+        return;
+      }
       
       const questaoIndex = match[1];
-      const opcaoIndex = new Date().getTime(); // Usar timestamp para opções também
-      
-      const opcaoHtml = `
-        <div class="opcao-field">
-          <input type="text" 
-                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][texto]"
-                 class="form-control" 
-                 placeholder="Texto da opção"
-                 required>
-          <input type="hidden" 
-                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][ordem]" 
-                 value="1">
-          <input type="hidden" 
-                 name="modelo[questoes_attributes][${questaoIndex}][questao_opcoes_attributes][${opcaoIndex}][_destroy]" 
-                 value="false"
-                 class="opcao-destroy-field">
-          <button type="button" class="btn btn-sm btn-danger remove-opcao-btn">×</button>
-        </div>
-      `;
-      
-      opcoesContainer.insertAdjacentHTML('beforeend', opcaoHtml);
-      console.log(`  Opção adicionada (índice: ${opcaoIndex})`);
+      adicionarOpcaoPadrao(wrapper, questaoIndex);
     }
     
     // Remover opção
@@ -295,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Mostrar/ocultar opções baseado no tipo
+  // ✅ CORREÇÃO PRINCIPAL: Mostrar/ocultar opções E adicionar opções padrão
   document.addEventListener('change', function(e) {
     if (e.target.classList.contains('tipo-select') || 
         e.target.name?.includes('[tipo]')) {
@@ -304,18 +326,45 @@ document.addEventListener('DOMContentLoaded', function() {
       const wrapper = e.target.closest('.questao-wrapper');
       const opcoesSection = wrapper.querySelector('.opcoes-section');
       
+      if (!opcoesSection) {
+        console.error('❌ Seção de opções não encontrada');
+        return;
+      }
+      
       if (e.target.value === 'multipla_escolha') {
+        console.log('  Mostrando seção de opções');
         opcoesSection.style.display = 'block';
         
-        // Adicionar 2 opções padrão se vazio
+        // ✅ CORREÇÃO: Adicionar opções DIRETAMENTE (não via click)
         const opcoesContainer = opcoesSection.querySelector('.opcoes-container');
-        if (opcoesContainer.querySelectorAll('.opcao-field').length === 0) {
-          console.log('  Adicionando 2 opções padrão');
-          const addBtn = opcoesSection.querySelector('.add-opcao-btn');
-          addBtn.click();
-          setTimeout(() => addBtn.click(), 10);
+        const opcoesExistentes = opcoesContainer.querySelectorAll('.opcao-field:not([style*="display: none"])');
+        
+        console.log(`  Opções existentes: ${opcoesExistentes.length}`);
+        
+        if (opcoesExistentes.length === 0) {
+          console.log('  Adicionando 2 opções padrão DIRETAMENTE');
+          
+          // Pegar índice da questão
+          const questaoInput = wrapper.querySelector('input[name*="questoes_attributes"]');
+          if (questaoInput) {
+            const match = questaoInput.name.match(/\[(\d+)\]/);
+            if (match) {
+              const questaoIndex = match[1];
+              
+              // Adicionar 2 opções padrão
+              adicionarOpcaoPadrao(wrapper, questaoIndex);
+              
+              // Pequeno delay para garantir que o DOM foi atualizado
+              setTimeout(() => {
+                adicionarOpcaoPadrao(wrapper, questaoIndex);
+              }, 50); // ← Aumentado de 10ms para 50ms
+              
+              console.log('  ✅ 2 opções padrão adicionadas');
+            }
+          }
         }
       } else {
+        console.log('  Ocultando seção de opções');
         opcoesSection.style.display = 'none';
       }
     }
@@ -324,12 +373,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // ✅ INICIALIZAÇÃO: Atualizar ordem das questões existentes
   updateAllOrdens();
   
-  // Inicializar tipos existentes
+  // ✅ INICIALIZAÇÃO: Mostrar opções para questões que já são múltipla escolha
+  console.log('🔄 Inicializando tipos de questão existentes');
   document.querySelectorAll('.tipo-select').forEach(select => {
+    console.log(`  Questão com tipo: ${select.value}`);
     if (select.value === 'multipla_escolha') {
       const wrapper = select.closest('.questao-wrapper');
       const opcoesSection = wrapper.querySelector('.opcoes-section');
       if (opcoesSection) {
+        console.log('  Mostrando opções para questão existente');
         opcoesSection.style.display = 'block';
       }
     }
@@ -339,3 +391,4 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log(`📊 Total de questões: ${container.querySelectorAll('.questao-wrapper').length}`);
 });
 </script>
+
