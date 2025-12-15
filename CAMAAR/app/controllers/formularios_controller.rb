@@ -1,3 +1,5 @@
+# Controller responsável pelo gerenciamento de formulários de avaliação.
+# Permite criar, editar, visualizar, ativar, desativar e encerrar formulários.
 class FormulariosController < ApplicationController
 
     before_action :require_login

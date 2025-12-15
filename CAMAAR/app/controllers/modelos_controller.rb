@@ -1,3 +1,5 @@
+# Controller responsável pelo gerenciamento de modelos (templates) de formulários.
+# Permite criar, editar, visualizar e excluir modelos de formulários.
 class ModelosController < ApplicationController
     before_action :require_login
     before_action :require_admin, except: [:index, :show]

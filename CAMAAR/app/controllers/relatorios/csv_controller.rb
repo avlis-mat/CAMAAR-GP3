@@ -1,11 +1,19 @@
 require 'csv'
 
-# app/controllers/relatorios/csv_controller.rb
+# Controller responsável pela geração de relatórios em formato CSV.
+# Permite exportar respostas de formulários para análise externa.
+# Apenas administradores podem acessar este controller.
 class Relatorios::CsvController < ApplicationController
   before_action :require_login
   before_action :require_admin
   
-  # GET /relatorios/formulario/:id/csv
+  # Gera e envia relatório CSV de respostas de um formulário.
+  # As respostas são anonimizadas (identificadas apenas como "Respondente N").
+  #
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Gera arquivo CSV com respostas do formulário
+  #   - Envia arquivo como download para o navegador
   def show
     @formulario = Formulario.find(params[:id])
     
@@ -23,6 +31,12 @@ class Relatorios::CsvController < ApplicationController
   
   private
   
+  # Gera o conteúdo CSV do relatório de respostas.
+  #
+  # @return [String] conteúdo CSV formatado
+  # @note O CSV contém:
+  #   - Headers: Respondente, Data/Hora e uma coluna por questão
+  #   - Linhas: uma por usuário que respondeu, com respostas anonimizadas
   def gerar_csv_relatorio
     # Headers do CSV (anônimo)
     headers = ['Respondente', 'Data/Hora']

@@ -1,3 +1,16 @@
+# Modelo que representa uma opção de resposta para questões de múltipla escolha.
+#
+# Uma opção pertence a uma questão e pode ser selecionada pelos usuários
+# ao responder formulários. Suporta controle de versões através do campo agrupamento.
+#
+# @example Criar uma opção de resposta
+#   opcao = QuestaoOpcao.new(
+#     questao: questao,
+#     texto: "Opção A",
+#     ordem: 1,
+#     versao: 1,
+#     status: "ativo"
+#   )
 class QuestaoOpcao < ApplicationRecord
   belongs_to :questao
 
@@ -18,6 +31,12 @@ class QuestaoOpcao < ApplicationRecord
   
   private
   
+  # Define o agrupamento inicial após a criação da opção.
+  # Este método é chamado automaticamente pelo callback after_create
+  # quando o agrupamento não foi definido previamente.
+  #
+  # @return [void]
+  # @note Efeito colateral: atualiza o campo agrupamento no banco de dados
   def set_agrupamento_inicial
     update_column(:agrupamento, id)
   end

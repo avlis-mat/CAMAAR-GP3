@@ -1,4 +1,6 @@
-# app/controllers/importacao_controller.rb
+# Controller responsável pela importação de dados do SIGAA.
+# Permite importar turmas e membros de turmas através de arquivos JSON.
+# Apenas administradores podem acessar este controller.
 class ImportacaoController < ApplicationController
   before_action :require_login
   before_action :require_admin
