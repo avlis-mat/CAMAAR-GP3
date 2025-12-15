@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    usuario = Usuario.find_by(email: params[:email])
+    usuario = Usuario.find_by(email: params[:login]) || Usuario.find_by(matricula: params[:login])
     
     if usuario&.authenticate(params[:password])
       if usuario.ativo?

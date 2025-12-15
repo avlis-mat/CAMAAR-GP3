@@ -6,6 +6,9 @@ class UsuarioMailer < ApplicationMailer
   def convite_cadastro(usuario, token)
     @usuario = usuario
     @token = token
+    Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }  # Temporário
+    Rails.logger.info "Mailer: Token passado: #{token.inspect}"  # Log do objeto token
+    Rails.logger.info "Mailer: Token.token: #{token.token}" 
     @url = definir_senha_url(token: token.token)
     
     mail(

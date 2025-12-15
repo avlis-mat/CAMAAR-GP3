@@ -1,6 +1,6 @@
 # app/controllers/usuarios_controller.rb
 class UsuariosController < ApplicationController
-  before_action :require_login, except: [:definir_senha, :salvar_senha]
+  before_action :require_login, except: [:definir_senha, :salvar_senha, :redefinir_senha, :enviar_redefinicao, :resetar_senha, :salvar_nova_senha]
   before_action :require_admin, only: [:index, :new, :create, :edit, :update, :enviar_convite, :enviar_convites_lote]
   before_action :set_usuario, only: [:show, :edit, :update, :enviar_convite]
   
@@ -259,7 +259,24 @@ class UsuariosController < ApplicationController
             render :edit, status: :unprocessable_entity
         end
     end
-    
+  
+    def ativar
+    @usuario = Usuario.find(params[:id])
+    if @usuario.update(status: 'ativo')
+      redirect_to usuarios_path, notice: 'Usuário ativado com sucesso'
+    else
+      redirect_to usuarios_path, alert: 'Erro ao ativar usuário'
+    end
+  end
+
+  def desativar
+    @usuario = Usuario.find(params[:id])
+    if @usuario.update(status: 'inativo')
+      redirect_to usuarios_path, notice: 'Usuário desativado com sucesso'
+    else
+      redirect_to usuarios_path, alert: 'Erro ao desativar usuário'
+    end
+  end
     
   
   private

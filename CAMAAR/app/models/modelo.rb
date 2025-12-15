@@ -17,7 +17,6 @@ class Modelo < ApplicationRecord
   scope :ativo, -> { where(status: 'ativo') }
   scope :inativos, -> { where(status: 'inativo') }
   scope :recentes, -> { order(created_at: :desc) }
-  default_scope { where(status: 'ativo') }
   scope :todas_versoes, -> { unscoped }
   scope :versoes_de, ->(agrup) { unscoped.where(agrupamento: agrup).order(:versao) }
 
@@ -37,19 +36,21 @@ class Modelo < ApplicationRecord
     questoes.count
   end
   
-  def duplicar
+=begin  def duplicar
     novo_modelo = self.dup
-    novo_modelo.nome = "#{nome} (Cópia)"
-    novo_modelo.versao = 1
-    novo_modelo.agrupamento = nil
+    novo_modelo.nome = self.nome
+    novo_modelo.versao = self.versao + 1
+    novo_modelo.agrupamento = self.agrupamento || self.id
+    novo_modelo.status = 'ativo'
     
     # Duplicar questões
     questoes.each do |questao|
       nova_questao = novo_modelo.questoes.build(
-        texto: questao.texto,
+        enunciado: questao.enunciado,
         tipo: questao.tipo,
-        obrigatoria: questao.obrigatoria,
-        ordem: questao.ordem
+        ordem: questao.ordem,
+        versao: questao.versao,
+        status: questao.status
       )
       
       # Duplicar opções
@@ -63,7 +64,41 @@ class Modelo < ApplicationRecord
     
     novo_modelo
   end
+=end    
+
+  def duplicar
+  novo_modelo = self.dup
+  novo_modelo.nome = self.nome
+  novo_modelo.versao = self.versao + 1
+  novo_modelo.agrupamento = self.agrupamento || self.id
+  novo_modelo.status = 'ativo'
   
+  # Duplicar questões mantendo tracking de versões
+  questoes.each do |questao|
+    nova_questao = novo_modelo.questoes.build(
+      enunciado: questao.enunciado,
+      tipo: questao.tipo,
+      ordem: questao.ordem,
+      versao: questao.versao + 1,  # ✅ Incrementa versão
+      agrupamento: questao.agrupamento || questao.id,  # ✅ Mantém agrupamento
+      status: 'ativo'
+    )
+    
+    # Duplicar opções
+    questao.questao_opcoes.each do |opcao|
+      nova_questao.questao_opcoes.build(
+        texto: opcao.texto,
+        ordem: opcao.ordem,
+        versao: opcao.versao + 1,  # ✅ Incrementa versão
+        agrupamento: opcao.agrupamento || opcao.id,  # ✅ Mantém agrupamento
+        status: 'ativo'
+      )
+    end
+  end
+  
+  novo_modelo
+end
+
   private
   
   def set_agrupamento

@@ -52,7 +52,13 @@ class ModelosController < ApplicationController
   
   def update
     if @modelo.update(modelo_params)
-      redirect_to @modelo, notice: 'Template atualizado com sucesso!'
+      # Desativar o modelo atual
+      @modelo.update(status: 'inativo')
+      
+      # Criar nova versão
+      novo_modelo = @modelo.duplicar
+      novo_modelo.save
+      redirect_to edit_modelo_path(novo_modelo), notice: 'Template atualizado com sucesso! Nova versão criada.'
     else
       render :edit, status: :unprocessable_entity
     end

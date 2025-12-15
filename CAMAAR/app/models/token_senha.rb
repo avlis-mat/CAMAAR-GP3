@@ -6,8 +6,8 @@ class TokenSenha < ApplicationRecord
             inclusion: { in: %w[ativacao redefinicao] }
   validates :expiracao, presence: true
   
-  before_validation :gerar_token
-  before_validation :set_expiracao
+  before_validation :gerar_token, on: :create
+  before_validation :set_expiracao, on: :create
   
   scope :validos, -> { 
     where(usado: false).where('expiracao > ?', Time.current) 
@@ -35,14 +35,16 @@ class TokenSenha < ApplicationRecord
   private
   
   def gerar_token
+    return if token.present?
     # Gerar token seguro e único
     loop do
-      self.token = SecureRandom.urlsafe_base64(32)
+      self.token = SecureRandom.urlsafe_base64(32, false)
       break unless TokenSenha.exists?(token: token)
     end
   end
   
   def set_expiracao
+    return if expiracao.present?
     # Ativação: 48 horas
     # Redefinição: 24 horas
     self.expiracao = case tipo

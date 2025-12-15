@@ -183,12 +183,11 @@ class Formulario < ApplicationRecord
     
     case destinatario
     when 'todos'
-      true
+      usuario.materias.include?(materia)
     when 'discentes'
-      usuario.aluno?
+      usuario.aluno? && usuario.materias.include?(materia)
     when 'docentes'
-      usuario.professor?
-      false
+      usuario.professor? && usuario.materias.include?(materia)
     end
   end
   

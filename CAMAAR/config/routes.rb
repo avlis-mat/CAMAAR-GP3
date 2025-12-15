@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   resources :usuarios, only: [:index, :new, :create, :show, :edit, :update] do
     member do
       post :enviar_convite  # Enviar convite individual
+      patch :ativar      # Ativar usuário
+      patch :desativar   # Desativar usuário
     end
     
     collection do

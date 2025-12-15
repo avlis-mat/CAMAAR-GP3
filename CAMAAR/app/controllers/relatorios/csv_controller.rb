@@ -24,8 +24,8 @@ class Relatorios::CsvController < ApplicationController
   private
   
   def gerar_csv_relatorio
-    # Headers do CSV
-    headers = ['Usuário', 'Email', 'Tipo', 'Data/Hora']
+    # Headers do CSV (anônimo)
+    headers = ['Respondente', 'Data/Hora']
     
     @formulario.modelo.questoes.order(:ordem).each_with_index do |questao, index|
       # Truncar enunciado longo para o header
@@ -42,13 +42,11 @@ class Relatorios::CsvController < ApplicationController
                                          .group_by(&:usuario_id)
       
       # Uma linha por usuário
-      respostas_por_usuario.each do |usuario_id, respostas|
-        usuario = respostas.first.usuario
+      respostas_por_usuario.each_with_index do |(usuario_id, respostas), index|
+        #usuario = respostas.first.usuario
         
         linha = [
-          usuario.nome,
-          usuario.email,
-          usuario.tipo.capitalize,
+          "Respondente #{index + 1}",
           respostas.first.respondido_em.strftime('%d/%m/%Y %H:%M')
         ]
         
