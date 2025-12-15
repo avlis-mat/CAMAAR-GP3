@@ -1,0 +1,26 @@
+<!-- filepath: CAMAAR/app/views/usuario_mailer/convite_cadastro.text.erb -->
+🎓 BEM-VINDO AO CAMAAR!
+
+Olá, <%= @usuario.nome %>!
+
+Você foi convidado a se cadastrar no Sistema CAMAAR da Universidade de Brasília.
+
+Para ativar sua conta e acessar o sistema, você precisa definir uma senha segura.
+
+CLIQUE NO LINK ABAIXO PARA DEFINIR SUA SENHA:
+<%= @url %>
+
+IMPORTANTE:
+- O link expira em 48 horas
+- Use uma senha forte com pelo menos 6 caracteres
+- Após definir a senha, você poderá fazer login normalmente
+
+Se o link não funcionar, copie e cole no seu navegador.
+
+Atenciosamente,
+Equipe CAMAAR
+Universidade de Brasília
+
+---
+Este é um email automático. Não responda a esta mensagem.
+© <%= Time.current.year %> Universidade de Brasília. Todos os direitos reservados.

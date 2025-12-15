@@ -1,0 +1,114 @@
+<!-- filepath: CAMAAR/app/views/usuarios/show.html.erb -->
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1><%= @usuario.nome %></h1>
+      <span class="usuario-badge <%= @usuario.status %>">
+        <%= @usuario.status.humanize %>
+      </span>
+    </div>
+    
+    <div class="header-actions">
+      <%= link_to "Editar", edit_usuario_path(@usuario), class: "btn btn-secondary" %>
+      <%= link_to "← Voltar", usuarios_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <!-- Informações do Usuário -->
+  <div class="info-card">
+    <h3>Informações Pessoais</h3>
+    
+    <div class="info-grid">
+      <div class="info-item">
+        <label>Nome:</label>
+        <p><%= @usuario.nome %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Email:</label>
+        <p><%= @usuario.email %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Matrícula:</label>
+        <p><%= @usuario.matricula %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Tipo:</label>
+        <p><%= @usuario.tipo.humanize %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Departamento:</label>
+        <p><%= @usuario.departamento || 'N/A' %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Status:</label>
+        <p><%= @usuario.status.humanize %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Data de Cadastro:</label>
+        <p><%= @usuario.created_at.strftime('%d/%m/%Y às %H:%M') %></p>
+      </div>
+      
+      <div class="info-item">
+        <label>Último Login:</label>
+        <p><%= @usuario.updated_at.strftime('%d/%m/%Y às %H:%M') %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Turmas -->
+  <% if @turmas.any? %>
+    <div class="turmas-section">
+      <h3>🏫 Turmas Vinculadas</h3>
+      
+      <div class="turmas-list">
+        <% @turmas.each do |turma| %>
+          <div class="turma-item">
+            <div class="turma-info">
+              <h4><%= link_to turma.nome_completo, materia_path(turma) %></h4>
+              <p><strong>Código:</strong> <%= turma.codigo_completo %></p>
+              <p><strong>Semestre:</strong> <%= turma.semestre %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="empty-state-small">
+      <p>Este usuário não está vinculado a nenhuma turma.</p>
+    </div>
+  <% end %>
+
+  <!-- Estatísticas -->
+  <div class="stats-card">
+    <h3>Estatísticas</h3>
+    
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-icon">📝</div>
+        <div class="stat-content">
+          <div class="stat-value"><%= @formularios_respondidos %></div>
+          <div class="stat-label">Formulários Respondidos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div class="footer-actions">
+    <% if @usuario.status == 'pendente' %>
+      <%= button_to "Enviar Convite de Cadastro", 
+                   enviar_convite_usuario_path(@usuario),
+                   method: :post,
+                   class: "btn btn-success",
+                   data: { confirm: "Enviar convite para #{@usuario.email}?" } %>
+    <% end %>
+    
+    <%= link_to "Editar Usuário", edit_usuario_path(@usuario), class: "btn btn-secondary" %>
+  </div>
+</div>

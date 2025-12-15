@@ -23,6 +23,29 @@
               <div class="stat-label">Templates Criados</div>
             </div>
           </div>
+          <div class="admin-actions">
+            <h3>Ações Rápidas</h3>
+            <div class="actions-grid">
+              <div class="action-card">
+                <div class="action-icon">📥</div>
+                <div class="action-content">
+                  <h4>Importar Dados</h4>
+                  <p>Importar usuários e turmas do SIGAA</p>
+                  <%= link_to "Importar", importacao_root_path, class: "btn btn-primary btn-sm" %>
+                </div>
+              </div>
+              
+              <div class="action-card">
+                <div class="action-icon">👥</div>
+                <div class="action-content">
+                  <h4>Gerenciar Usuários</h4>
+                  <p>Cadastrar, editar e enviar convites</p>
+                  <%= link_to "Usuários", usuarios_path, class: "btn btn-secondary btn-sm" %>
+                </div>
+              </div>
+              
+            </div>
+          </div>
         </div>
       <% else %>
         <div class="user-dashboard">

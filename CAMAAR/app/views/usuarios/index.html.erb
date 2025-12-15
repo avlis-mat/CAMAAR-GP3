@@ -1,0 +1,134 @@
+<!-- filepath: CAMAAR/app/views/usuarios/index.html.erb -->
+<div class="container">
+  <div class="page-header">
+    <h1>👥 Gerenciamento de Usuários</h1>
+    <%= link_to "Novo Usuário", new_usuario_path, class: "btn btn-primary" %>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">👤</div>
+      <div class="stat-content">
+        <div class="stat-value"><%= @usuarios.total_count %></div>
+        <div class="stat-label">Total de Usuários</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-value"><%= @usuarios_pendentes %></div>
+        <div class="stat-label">Usuários Pendentes</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-value"><%= @usuarios_ativos %></div>
+        <div class="stat-label">Usuários Ativos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <%= form_with(url: usuarios_path, method: :get, local: true, class: "filters-form") do |f| %>
+      <div class="filters-row">
+        <div class="filter-group">
+          <%= f.text_field :busca, 
+                          value: params[:busca], 
+                          placeholder: "Buscar por nome, email ou matrícula...",
+                          class: "filter-input" %>
+        </div>
+        
+        <div class="filter-group">
+          <%= f.select :status,
+                      options_for_select([
+                        ['Todos os status', ''],
+                        ['Pendente', 'pendente'],
+                        ['Ativo', 'ativo'],
+                        ['Inativo', 'inativo']
+                      ], params[:status]),
+                      {},
+                      class: "filter-select" %>
+        </div>
+        
+        <div class="filter-group">
+          <%= f.select :tipo,
+                      options_for_select([
+                        ['Todos os tipos', ''],
+                        ['Administrador', 'administrador'],
+                        ['Professor', 'professor'],
+                        ['Aluno', 'aluno']
+                      ], params[:tipo]),
+                      {},
+                      class: "filter-select" %>
+        </div>
+        
+        <div class="filter-actions">
+          <%= f.submit "Filtrar", class: "btn btn-secondary" %>
+          <% if params[:busca].present? || params[:status].present? || params[:tipo].present? %>
+            <%= link_to "Limpar", usuarios_path, class: "btn btn-outline" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Lista de Usuários -->
+  <% if @usuarios.any? %>
+    <div class="usuarios-grid">
+      <% @usuarios.each do |usuario| %>
+        <div class="usuario-card">
+          <div class="usuario-header">
+            <h3><%= usuario.nome %></h3>
+            <span class="usuario-badge <%= usuario.status %>">
+              <%= usuario.status.humanize %>
+            </span>
+          </div>
+          
+          <div class="usuario-body">
+            <div class="usuario-info">
+              <p><strong>Email:</strong> <%= usuario.email %></p>
+              <p><strong>Matrícula:</strong> <%= usuario.matricula %></p>
+              <p><strong>Tipo:</strong> <%= usuario.tipo.humanize %></p>
+              <p><strong>Departamento:</strong> <%= usuario.departamento || 'N/A' %></p>
+              <p><strong>Cadastro:</strong> <%= usuario.created_at.strftime('%d/%m/%Y') %></p>
+            </div>
+          </div>
+          
+          <div class="usuario-actions">
+            <%= link_to "Ver Detalhes", usuario_path(usuario), class: "btn btn-sm btn-primary" %>
+            
+            <% if usuario.status == 'pendente' %>
+              <%= button_to "Enviar Convite", 
+                           enviar_convite_usuario_path(usuario),
+                           method: :post,
+                           class: "btn btn-sm btn-success",
+                           data: { confirm: "Enviar convite para #{usuario.email}?" } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Paginação -->
+    <div class="pagination-container">
+      <%= paginate @usuarios %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <% if params[:busca].present? || params[:status].present? || params[:tipo].present? %>
+        <h3>Nenhum usuário encontrado</h3>
+        <p>Não encontramos usuários com os filtros aplicados.</p>
+        <%= link_to "Ver todos os usuários", usuarios_path, class: "btn btn-primary" %>
+      <% else %>
+        <h3>Nenhum usuário cadastrado</h3>
+        <p>Ainda não há usuários no sistema.</p>
+        <%= link_to "Cadastrar Primeiro Usuário", new_usuario_path, class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

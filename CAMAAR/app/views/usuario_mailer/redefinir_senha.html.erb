@@ -1,0 +1,55 @@
+<!-- filepath: CAMAAR/app/views/usuario_mailer/redefinir_senha.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background: #dc3545; color: white; padding: 20px; text-align: center; }
+      .content { padding: 20px; background: #f8f9fa; }
+      .button { display: inline-block; padding: 10px 20px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; }
+      .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🔐 Redefinição de Senha</h1>
+      </div>
+      
+      <div class="content">
+        <h2>Olá, <%= @usuario.nome %>!</h2>
+        
+        <p>Recebemos uma solicitação para redefinir sua senha no <strong>Sistema CAMAAR</strong>.</p>
+        
+        <p>Para criar uma nova senha, clique no botão abaixo:</p>
+        
+        <p style="text-align: center; margin: 30px 0;">
+          <a href="<%= @url %>" class="button">Redefinir Minha Senha</a>
+        </p>
+        
+        <p><strong>Importante:</strong></p>
+        <ul>
+          <li>O link expira em <strong>48 horas</strong></li>
+          <li>Se você não solicitou esta redefinição, ignore este email</li>
+          <li>Sua senha atual continuará funcionando até você definir uma nova</li>
+        </ul>
+        
+        <p>Se o botão não funcionar, copie e cole este link no seu navegador:</p>
+        <p style="word-break: break-all; background: #e9ecef; padding: 10px; border-radius: 3px;">
+          <%= @url %>
+        </p>
+        
+        <p>Atenciosamente,<br>
+        Equipe CAMAAR<br>
+        Universidade de Brasília</p>
+      </div>
+      
+      <div class="footer">
+        <p>Este é um email automático. Não responda a esta mensagem.</p>
+        <p>© <%= Time.current.year %> Universidade de Brasília</p>
+      </div>
+    </div>
+  </body>
+</html>

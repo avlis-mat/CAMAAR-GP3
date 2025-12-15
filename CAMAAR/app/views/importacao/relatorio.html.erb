@@ -1,0 +1,83 @@
+<!-- filepath: CAMAAR/app/views/importacao/relatorio.html.erb -->
+<div class="container">
+  <div class="page-header">
+    <h1>📊 Relatório de Importação</h1>
+    <%= link_to "← Nova Importação", importacao_root_path, class: "btn btn-secondary" %>
+    <%= link_to "Voltar ao Início", root_path, class: "btn btn-outline" %>
+  </div>
+
+  <% if @relatorio %>
+    <div class="relatorio-section">
+      <div class="success-card">
+        <h3>✅ Importação Concluída com Sucesso</h3>
+        <p><%= @relatorio[:mensagem] %></p>
+      </div>
+
+      <div class="stats-grid">
+        <% if @relatorio[:turmas_importadas] %>
+          <div class="stat-card">
+            <div class="stat-icon">🏫</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @relatorio[:turmas_importadas] %></div>
+              <div class="stat-label">Turmas Importadas</div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @relatorio[:usuarios_importados] %>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @relatorio[:usuarios_importados] %></div>
+              <div class="stat-label">Usuários Importados</div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @relatorio[:vinculos_criados] %>
+          <div class="stat-card">
+            <div class="stat-icon">🔗</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @relatorio[:vinculos_criados] %></div>
+              <div class="stat-label">Vínculos Criados</div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @relatorio[:convites_enviados] %>
+          <div class="stat-card">
+            <div class="stat-icon">📧</div>
+            <div class="stat-content">
+              <div class="stat-value"><%= @relatorio[:convites_enviados] %></div>
+              <div class="stat-label">Convites Enviados</div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @relatorio[:detalhes] && @relatorio[:detalhes].any? %>
+        <div class="detalhes-section">
+          <h3>📋 Detalhes da Importação</h3>
+          <div class="detalhes-list">
+            <% @relatorio[:detalhes].each do |detalhe| %>
+              <div class="detalhe-item">
+                <%= detalhe %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="relatorio-actions">
+        <%= link_to "Importar Mais Dados", importacao_root_path, class: "btn btn-primary" %>
+        <%= link_to "Gerenciar Usuários", usuarios_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="error-card">
+      <h3>❌ Relatório Não Encontrado</h3>
+      <p>O relatório solicitado não foi encontrado. Tente fazer uma nova importação.</p>
+      <%= link_to "Nova Importação", importacao_root_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

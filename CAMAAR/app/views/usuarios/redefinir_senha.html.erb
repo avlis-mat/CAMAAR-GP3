@@ -1,0 +1,32 @@
+<!-- filepath: CAMAAR/app/views/usuarios/redefinir_senha.html.erb -->
+<div class="container">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>🔑 Esqueci Minha Senha</h1>
+        <p>Informe seu email ou matrícula para receber instruções de redefinição.</p>
+      </div>
+
+      <% if flash[:alert] %>
+        <div class="alert alert-danger">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= form_with(url: redefinir_senha_path, method: :post, local: true, class: "auth-form") do |f| %>
+        <div class="form-group">
+          <%= f.label :identificacao, "Email ou Matrícula" %>
+          <%= f.text_field :identificacao, class: "form-control", required: true, placeholder: "seu.email@unb.br ou 123456789" %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit "Enviar Instruções", class: "btn btn-primary btn-block" %>
+        </div>
+      <% end %>
+
+      <div class="auth-footer">
+        <p>Lembrou sua senha? <%= link_to "Fazer Login", login_path %></p>
+      </div>
+    </div>
+  </div>
+</div>

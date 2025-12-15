@@ -1,0 +1,24 @@
+<!-- filepath: CAMAAR/app/views/usuario_mailer/redefinir_senha.text.erb -->
+🔐 REDEFINIÇÃO DE SENHA - CAMAAR
+
+Olá, <%= @usuario.nome %>!
+
+Recebemos uma solicitação para redefinir sua senha no Sistema CAMAAR.
+
+Para criar uma nova senha, clique no link abaixo:
+<%= @url %>
+
+IMPORTANTE:
+- O link expira em 48 horas
+- Se você não solicitou esta redefinição, ignore este email
+- Sua senha atual continuará funcionando até você definir uma nova
+
+Se o link não funcionar, copie e cole no seu navegador.
+
+Atenciosamente,
+Equipe CAMAAR
+Universidade de Brasília
+
+---
+Este é um email automático. Não responda a esta mensagem.
+© <%= Time.current.year %> Universidade de Brasília

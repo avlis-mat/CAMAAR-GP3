@@ -1,0 +1,334 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Importar Dados do SIGAA</h1>
+    <%= link_to "← Voltar", root_path, class: "btn btn-secondary" %>
+  </div>
+
+  <div class="import-section">
+    <div class="info-card">
+      <h3>📋 Instruções</h3>
+      <p>Importe dados de turmas e participantes através de arquivos JSON exportados do SIGAA.</p>
+      
+      <div class="instructions-grid">
+        <div class="instruction-item">
+          <h4>Tipos de Importação:</h4>
+          <ul>
+            <li><strong>Classes (Turmas):</strong> Importa apenas as turmas/matérias</li>
+            <li><strong>Class Members (Participantes):</strong> Importa usuários e os vincula às turmas</li>
+            <li><strong>Completo:</strong> Importa turmas e participantes em uma única operação</li>
+          </ul>
+        </div>
+        
+        <div class="instruction-item">
+          <h4>Formato dos Arquivos:</h4>
+          <p>Os arquivos devem estar em formato JSON válido exportado do SIGAA. Veja os exemplos abaixo:</p>
+          <ul>
+            <li><a href="#exemplo-classes">Exemplo: classes.json</a></li>
+            <li><a href="#exemplo-members">Exemplo: class_members.json</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <p><strong>⚠️ Importante:</strong></p>
+        <ul>
+          <li>Ao importar <strong>class_members</strong>, as turmas referenciadas devem existir (importe classes primeiro)</li>
+          <li>Novos usuários receberão email com link para ativar a conta</li>
+          <li>Usuários existentes serão atualizados com os novos dados</li>
+          <li>A matrícula é usada como identificador único</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h3>Selecionar Arquivo para Importação</h3>
+      
+      <%= form_with url: importacao_create_path, method: :post, multipart: true, local: true, class: "import-form" do |f| %>
+        
+        <div class="form-group">
+          <%= label_tag :tipo, "Tipo de Importação" %>
+          <%= select_tag :tipo, 
+              options_for_select([
+                ['Classes (Turmas)', 'classes'],
+                ['Class Members (Participantes)', 'class_members']
+              ]),
+              class: "form-control"
+          %>
+          <small class="help-text">Selecione o tipo de dados que deseja importar</small>
+        </div>
+
+        <div class="form-group">
+          <%= label_tag :arquivo, "Arquivo JSON" %>
+          <%= file_field_tag :arquivo, 
+              accept: '.json',
+              class: "form-control-file",
+              required: true
+          %>
+          <small class="help-text">Selecione um arquivo JSON exportado do SIGAA</small>
+        </div>
+
+        <div class="form-actions">
+          <%= submit_tag "Importar", class: "btn btn-primary btn-lg" %>
+          <%= link_to "Cancelar", root_path, class: "btn btn-secondary" %>
+        </div>
+        
+      <% end %>
+    </div>
+
+    <!-- Exemplos de JSON -->
+    <div class="examples-section">
+      <h3>📄 Exemplos de Arquivos JSON</h3>
+      
+      <div class="example-card" id="exemplo-classes">
+        <h4>classes.json</h4>
+        <p class="example-description">Estrutura para importação de turmas:</p>
+        <pre><code>[
+  {
+    "code": "CIC0097",
+    "name": "BANCOS DE DADOS",
+    "class": {
+      "classCode": "TA",
+      "semester": "2021.2",
+      "time": "35T45"
+    }
+  },
+  {
+    "code": "CIC0105",
+    "name": "ENGENHARIA DE SOFTWARE",
+    "class": {
+      "classCode": "TA",
+      "semester": "2021.2",
+      "time": "35M12"
+    }
+  }
+]</code></pre>
+        <div class="example-notes">
+          <p><strong>Campos obrigatórios:</strong></p>
+          <ul>
+            <li><code>code</code> - Código da disciplina (ex: CIC0097)</li>
+            <li><code>name</code> - Nome da disciplina</li>
+            <li><code>class.classCode</code> - Código da turma (ex: TA, TB)</li>
+            <li><code>class.semester</code> - Semestre (formato: YYYY.N)</li>
+          </ul>
+          <p><strong>Campos opcionais:</strong></p>
+          <ul>
+            <li><code>class.time</code> - Horário da turma</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="example-card" id="exemplo-members">
+        <h4>class_members.json</h4>
+        <p class="example-description">Estrutura para importação de participantes (docentes e dicentes):</p>
+        <pre><code>[
+  {
+    "code": "CIC0097",
+    "classCode": "TA",
+    "semester": "2021.2",
+    "dicente": [
+      {
+        "nome": "Ana Clara Jordao Perna",
+        "curso": "CIÊNCIA DA COMPUTAÇÃO/CIC",
+        "matricula": "190084006",
+        "usuario": "190084006",
+        "formacao": "graduando",
+        "ocupacao": "dicente",
+        "email": "acjpjvjp@gmail.com"
+      },
+      {
+        "nome": "Andre Carvalho de Roure",
+        "curso": "CIÊNCIA DA COMPUTAÇÃO/CIC",
+        "matricula": "200033522",
+        "usuario": "200033522",
+        "formacao": "graduando",
+        "ocupacao": "dicente",
+        "email": "andreCarvalhoroure@gmail.com"
+      }
+    ],
+    "docente": {
+      "nome": "MARISTELA TERTO DE HOLANDA",
+      "departamento": "DEPTO CIÊNCIAS DA COMPUTAÇÃO",
+      "formacao": "DOUTORADO",
+      "usuario": "83807519491",
+      "email": "mholanda@unb.br",
+      "ocupacao": "docente"
+    }
+  }
+]</code></pre>
+        <div class="example-notes">
+          <p><strong>Campos obrigatórios (usuário):</strong></p>
+          <ul>
+            <li><code>nome</code> - Nome completo</li>
+            <li><code>matricula</code> - Matrícula (9 dígitos) ou CPF (11 dígitos para docentes)</li>
+            <li><code>email</code> - Email válido</li>
+          </ul>
+          <p><strong>Campos utilizados:</strong></p>
+          <ul>
+            <li><code>curso</code> - O departamento é extraído (parte após /)</li>
+            <li><code>ocupacao</code> - Define se é docente ou dicente</li>
+          </ul>
+          <p><strong>Observações:</strong></p>
+          <ul>
+            <li>Docente é um objeto único por turma</li>
+            <li>Dicentes é um array que pode conter vários alunos</li>
+            <li>A turma referenciada deve existir no sistema</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atualização do SIGAA -->
+    <div class="update-section">
+      <h3>🔄 Atualizar Base de Dados do SIGAA</h3>
+      <p>Se você já possui dados importados e deseja atualizá-los com as informações mais recentes do SIGAA:</p>
+      <%= link_to "Atualizar dados do SIGAA", importacao_atualizar_path, class: "btn btn-warning" %>
+    </div>
+  </div>
+</div>
+
+<style>
+.import-section {
+  margin-top: 2rem;
+}
+
+.info-card, .form-card, .update-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.instructions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.instruction-item h4 {
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+.instruction-item ul {
+  list-style-position: inside;
+  line-height: 1.8;
+}
+
+.warning-box {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.warning-box p {
+  margin-bottom: 0.5rem;
+  color: #856404;
+  font-weight: 600;
+}
+
+.warning-box ul {
+  margin: 0.5rem 0 0 1.5rem;
+  color: #856404;
+}
+
+.form-control-file {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.form-control-file:hover {
+  border-color: #3b82f6;
+}
+
+.examples-section {
+  margin-top: 3rem;
+}
+
+.example-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.example-card h4 {
+  color: #003366;
+  margin-bottom: 0.5rem;
+}
+
+.example-description {
+  color: #6b7280;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.example-card pre {
+  background: #1f2937;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.example-card code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #f9fafb;
+  line-height: 1.5;
+}
+
+.example-notes {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.example-notes p {
+  margin: 0.75rem 0 0.5rem 0;
+  font-weight: 600;
+  color: #374151;
+}
+
+.example-notes ul {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.example-notes code {
+  background: #e5e7eb;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #1f2937;
+}
+
+.update-section {
+  text-align: center;
+  border: 2px dashed #ffc107;
+  background: #fff3cd;
+}
+
+.update-section h3 {
+  color: #856404;
+}
+
+@media (max-width: 768px) {
+  .instructions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

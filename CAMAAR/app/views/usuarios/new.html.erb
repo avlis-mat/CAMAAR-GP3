@@ -1,0 +1,64 @@
+<!-- filepath: CAMAAR/app/views/usuarios/new.html.erb -->
+<div class="container">
+  <div class="page-header">
+    <h1>👤 Cadastrar Novo Usuário</h1>
+    <%= link_to "← Voltar", usuarios_path, class: "btn btn-secondary" %>
+  </div>
+
+  <div class="form-card">
+    <%= form_with(model: @usuario, local: true, class: "usuario-form") do |f| %>
+      <% if @usuario.errors.any? %>
+        <div class="alert alert-danger">
+          <h4><%= pluralize(@usuario.errors.count, "erro") %> impediram que o usuário fosse salvo:</h4>
+          <ul>
+            <% @usuario.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-section">
+        <h3>Informações Pessoais</h3>
+        
+        <div class="form-group">
+          <%= f.label :nome, "Nome Completo" %>
+          <%= f.text_field :nome, class: "form-control", required: true %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :email, "Email Institucional" %>
+          <%= f.email_field :email, class: "form-control", required: true %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :matricula, "Matrícula" %>
+          <%= f.text_field :matricula, class: "form-control", required: true %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :tipo, "Tipo de Usuário" %>
+          <%= f.select :tipo,
+                      options_for_select([
+                        ['Administrador', 'administrador'],
+                        ['Professor', 'professor'],
+                        ['Aluno', 'aluno']
+                      ]),
+                      {},
+                      class: "form-control",
+                      required: true %>
+        </div>
+        
+        <div class="form-group">
+          <%= f.label :departamento, "Departamento" %>
+          <%= f.text_field :departamento, class: "form-control", placeholder: "Ex: CIC, MAT, etc." %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Cadastrar Usuário", class: "btn btn-primary" %>
+        <%= link_to "Cancelar", usuarios_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

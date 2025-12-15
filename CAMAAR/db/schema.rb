@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_09_015510) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_14_231745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_09_015510) do
     t.bigint "formulario_id", null: false
     t.bigint "usuario_id", null: false
     t.bigint "questao_id", null: false
-    t.bigint "questao_opcao_id", null: false
+    t.bigint "questao_opcao_id"
     t.text "conteudo"
     t.datetime "respondido_em"
     t.datetime "created_at", null: false
@@ -122,6 +122,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_09_015510) do
     t.boolean "usado", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "usado_em"
     t.index ["token"], name: "index_token_senhas_on_token", unique: true
     t.index ["usuario_id", "tipo", "usado"], name: "index_token_senhas_on_usuario_id_and_tipo_and_usado"
     t.index ["usuario_id"], name: "index_token_senhas_on_usuario_id"
