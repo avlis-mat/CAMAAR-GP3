@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_14_231745) do
     t.bigint "formulario_id", null: false
     t.bigint "usuario_id", null: false
     t.bigint "questao_id", null: false
-    t.bigint "questao_opcao_id"
+    t.bigint "questao_opcao_id", null: false
     t.text "conteudo"
     t.datetime "respondido_em"
     t.datetime "created_at", null: false

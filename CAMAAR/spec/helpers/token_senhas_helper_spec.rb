@@ -11,5 +11,9 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe TokenSenhasHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "módulo" do
+    it "está disponível como helper" do
+      expect(helper).to respond_to(:redefinir_senha_path)
+    end
+  end
 end
