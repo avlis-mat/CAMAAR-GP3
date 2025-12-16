@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>DOCUMENTACAO_RDOC - CAMAAR - Documentação do Sistema</title>
+
+
+  <meta name="keywords" content="ruby,documentation,DOCUMENTACAO_RDOC">
+  <meta name="description" content="DOCUMENTACAO_RDOC: usuario. modelo.">
+
+
+
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<div id="navigation-toggle" role="button" tabindex="0" aria-label="Toggle sidebar" aria-expanded="true" aria-controls="navigation">
+  <span aria-hidden="true">&#9776;</span>
+</div>
+
+
+<nav id="navigation" role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
+             autocomplete="off"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+
+
+
+
+  <ul class="link-list" role="directory">
+    
+
+
+
+
+          <li>
+            <details open>
+              <summary>
+      <a href="#label-Documenta-C3-A7-C3-A3o+RDoc+-+CAMAAR">Documentação RDoc - CAMAAR</a>
+</summary>
+              <ul class="link-list" role="directory">
+                
+
+
+
+
+          <li>
+            <details open>
+              <summary>
+      <a href="#label-Resumo+da+Documenta-C3-A7-C3-A3o">Resumo da Documentação</a>
+</summary>
+              <ul class="link-list" role="directory">
+                
+
+
+
+
+          <li>
+      <a href="#label-Models+Documentados-3A">Models Documentados:</a>
+</li>
+
+
+
+
+          <li>
+      <a href="#label-Controllers+Documentados-3A">Controllers Documentados:</a>
+</li>
+
+
+
+
+          <li>
+      <a href="#label-Helpers+e+Mailers+Documentados-3A">Helpers e Mailers Documentados:</a>
+</li>
+
+
+
+              </ul>
+            </details>
+          </li>
+
+
+
+
+          <li>
+      <a href="#label-Como+Gerar+a+Documenta-C3-A7-C3-A3o+HTML">Como Gerar a Documentação HTML</a>
+</li>
+
+
+
+
+          <li>
+      <a href="#label-M-C3-A9todos+N-C3-A3o+Documentados">Métodos Não Documentados</a>
+</li>
+
+
+
+
+          <li>
+      <a href="#label-Padr-C3-A3o+de+Documenta-C3-A7-C3-A3o+Utilizado">Padrão de Documentação Utilizado</a>
+</li>
+
+
+
+
+          <li>
+      <a href="#label-Verifica-C3-A7-C3-A3o+da+Documenta-C3-A7-C3-A3o">Verificação da Documentação</a>
+</li>
+
+
+
+              </ul>
+            </details>
+          </li>
+
+
+
+  </ul>
+</div>
+
+
+  
+
+
+
+
+<div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+
+
+
+    <li><a href="./DOCUMENTACAO_RDOC_md.html">DOCUMENTACAO_RDOC</a></li>
+
+
+
+    <li><a href="./Dockerfile.html">Dockerfile</a></li>
+
+
+
+    <li><a href="./Gemfile.html">Gemfile</a></li>
+
+
+
+    <li><a href="./Gemfile_lock.html">Gemfile.lock</a></li>
+
+
+
+    <li><a href="./README_md.html">README</a></li>
+
+
+
+    <li><a href="./Rakefile.html">Rakefile</a></li>
+
+
+
+    <li><details><summary>app</summary>
+    <ul class="link-list">
+
+      <li><a href="./app/assets/stylesheets/application_css.html">application.css</a></li>
+
+      <li><a href="./app/assets/stylesheets/formularios_css.html">formularios.css</a></li>
+
+      <li><a href="./app/assets/stylesheets/modelos_css.html">modelos.css</a></li>
+
+      <li><a href="./app/javascript/application_js.html">application.js</a></li>
+
+      <li><a href="./app/javascript/controllers/application_js.html">application.js</a></li>
+
+      <li><a href="./app/javascript/controllers/hello_controller_js.html">hello_controller.js</a></li>
+
+      <li><a href="./app/javascript/controllers/index_js.html">index.js</a></li>
+
+      <li><a href="./app/views/pwa/service-worker_js.html">service-worker.js</a></li>
+
+    </ul></details></li>
+
+
+
+    <li><a href="./bin/docker-entrypoint.html">docker-entrypoint</a></li>
+
+
+
+    <li><a href="./config_ru.html">config.ru</a></li>
+
+
+
+    <li><a href="./config/credentials_yml_enc.html">credentials.yml.enc</a></li>
+
+
+
+    <li><details><summary>features</summary>
+    <ul class="link-list">
+
+      <li><a href="./features/atualizar_bd_SIGAA_feature.html">atualizar_bd_SIGAA.feature</a></li>
+
+      <li><a href="./features/cadastrar_usuarios_do_sistema_100_feature.html">cadastrar_usuarios_do_sistema_100.feature</a></li>
+
+      <li><a href="./features/criacao_formulario_docentes_dicentes_113_feature.html">criacao_formulario_docentes_dicentes_113.feature</a></li>
+
+      <li><a href="./features/criar_formulario_de_avaliacao_103_feature.html">criar_formulario_de_avaliacao_103.feature</a></li>
+
+      <li><a href="./features/criar_template_de_formulario_102_feature.html">criar_template_de_formulario_102.feature</a></li>
+
+      <li><a href="./features/desktop_ini.html">desktop.ini</a></li>
+
+      <li><a href="./features/edicao_delecao_templates_112_feature.html">edicao_delecao_templates_112.feature</a></li>
+
+      <li><a href="./features/gerar_relatorio_do_administrador_101_feature.html">gerar_relatorio_do_administrador_101.feature</a></li>
+
+      <li><a href="./features/importar_dados_do_sigaa_98_feature.html">importar_dados_do_sigaa_98.feature</a></li>
+
+      <li><a href="./features/nova_issue_de_exemplo_248_feature.html">nova_issue_de_exemplo_248.feature</a></li>
+
+      <li><a href="./features/redefinir_senha_feature.html">redefinir_senha.feature</a></li>
+
+      <li><a href="./features/responder_formulario_feature.html">responder_formulario.feature</a></li>
+
+      <li><a href="./features/sistema_definir_senha_feature.html">sistema_definir_senha.feature</a></li>
+
+      <li><a href="./features/sistema_gerenciamento_por_departamento_feature.html">sistema_gerenciamento_por_departamento.feature</a></li>
+
+      <li><a href="./features/sistema_login_feature.html">sistema_login.feature</a></li>
+
+      <li><a href="./features/visualizacao_formularios_responder_109_feature.html">visualizacao_formularios_responder_109.feature</a></li>
+
+      <li><a href="./features/visualizacao_resultados_formularios_110_feature.html">visualizacao_resultados_formularios_110.feature</a></li>
+
+      <li><a href="./features/visualizacao_templates_criados_111_feature.html">visualizacao_templates_criados_111.feature</a></li>
+
+    </ul></details></li>
+
+
+
+    <li><a href="./lib/tasks/cucumber_rake.html">cucumber.rake</a></li>
+
+
+
+    <li><a href="./log/test_log.html">test.log</a></li>
+
+
+
+    <li><details><summary>public</summary>
+    <ul class="link-list">
+
+      <li><a href="./public/400_html.html">400.html</a></li>
+
+      <li><a href="./public/404_html.html">404.html</a></li>
+
+      <li><a href="./public/406-unsupported-browser_html.html">406-unsupported-browser.html</a></li>
+
+      <li><a href="./public/422_html.html">422.html</a></li>
+
+      <li><a href="./public/500_html.html">500.html</a></li>
+
+      <li><a href="./public/robots_txt.html">robots</a></li>
+
+    </ul></details></li>
+
+
+
+    <li><a href="./tmp/local_secret_txt.html">local_secret</a></li>
+
+  </ul>
+</div>
+
+
+
+  <footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a></p>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.17.0.</p>
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.</p>
+</footer>
+
+</nav>
+
+<main role="main" aria-label="Page DOCUMENTACAO_RDOC.md">
+
+<h1 id="label-Documenta-C3-A7-C3-A3o+RDoc+-+CAMAAR"><a href="#label-Documenta-C3-A7-C3-A3o+RDoc+-+CAMAAR">Documentação RDoc - CAMAAR</a></h1>
+
+<h2 id="label-Resumo+da+Documenta-C3-A7-C3-A3o"><a href="#label-Resumo+da+Documenta-C3-A7-C3-A3o">Resumo da Documentação</a></h2>
+
+<p>A documentação RDoc foi adicionada aos seguintes arquivos do projeto:</p>
+
+<h3 id="label-Models+Documentados-3A"><a href="#label-Models+Documentados-3A">Models Documentados:</a></h3>
+<ul><li>
+<p><a href="app/models/usuario_rb.html">app/models/usuario.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de usuário com todos os métodos documentados</p>
+</li><li>
+<p><a href="app/models/modelo_rb.html">app/models/modelo.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de template de formulário</p>
+</li><li>
+<p><a href="app/models/questao_rb.html">app/models/questao.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de questão</p>
+</li><li>
+<p><a href="app/models/formulario_rb.html">app/models/formulario.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de formulário de avaliação</p>
+</li><li>
+<p><a href="app/models/materia_rb.html">app/models/materia.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de matéria/disciplina</p>
+</li><li>
+<p><a href="app/models/resposta_rb.html">app/models/resposta.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de resposta</p>
+</li><li>
+<p><a href="app/models/questao_opcao_rb.html">app/models/questao_opcao.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de opção de resposta</p>
+</li><li>
+<p><a href="app/models/usuario_materia_rb.html">app/models/usuario_materia.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de associação usuário-matéria</p>
+</li><li>
+<p><a href="app/models/token_senha_rb.html">app/models/token_senha.rb</a> - <a href="Modelo.html"><code>Modelo</code></a> de token de segurança</p>
+</li></ul>
+
+<h3 id="label-Controllers+Documentados-3A"><a href="#label-Controllers+Documentados-3A">Controllers Documentados:</a></h3>
+<ul><li>
+<p><a href="app/controllers/application_controller_rb.html">app/controllers/application_controller.rb</a> - Controller base com métodos de autenticação</p>
+</li><li>
+<p><a href="app/controllers/home_controller_rb.html">app/controllers/home_controller.rb</a> - Controller da página inicial</p>
+</li><li>
+<p><a href="app/controllers/usuarios_controller_rb.html">app/controllers/usuarios_controller.rb</a> - Controller de gerenciamento de usuários</p>
+</li><li>
+<p><a href="app/controllers/sessions_controller_rb.html">app/controllers/sessions_controller.rb</a> - Controller de sessões (login/logout)</p>
+</li><li>
+<p><a href="app/controllers/modelos_controller_rb.html">app/controllers/modelos_controller.rb</a> - Controller de modelos/templates</p>
+</li><li>
+<p><a href="app/controllers/formularios_controller_rb.html">app/controllers/formularios_controller.rb</a> - Controller de formulários</p>
+</li><li>
+<p><a href="app/controllers/respostas_controller_rb.html">app/controllers/respostas_controller.rb</a> - Controller de respostas</p>
+</li><li>
+<p><a href="app/controllers/importacao_controller_rb.html">app/controllers/importacao_controller.rb</a> - Controller de importação do SIGAA</p>
+</li><li>
+<p><a href="app/controllers/relatorios/csv_controller_rb.html">app/controllers/relatorios/csv_controller.rb</a> - Controller de relatórios CSV</p>
+</li></ul>
+
+<h3 id="label-Helpers+e+Mailers+Documentados-3A"><a href="#label-Helpers+e+Mailers+Documentados-3A">Helpers e Mailers Documentados:</a></h3>
+<ul><li>
+<p><a href="app/helpers/application_helper_rb.html">app/helpers/application_helper.rb</a> - Helper principal</p>
+</li><li>
+<p><a href="app/mailers/usuario_mailer_rb.html">app/mailers/usuario_mailer.rb</a> - Mailer de usuários</p>
+</li></ul>
+
+<h2 id="label-Como+Gerar+a+Documenta-C3-A7-C3-A3o+HTML"><a href="#label-Como+Gerar+a+Documenta-C3-A7-C3-A3o+HTML">Como Gerar a Documentação HTML</a></h2>
+
+<p>Para gerar a documentação HTML completa, execute o seguinte comando no diretório do projeto:</p>
+
+<pre>cd projeto_camaar_1/CAMAAR
+bundle exec rdoc --all --format=html --output=doc --title=&quot;CAMAAR - Documentação do Sistema&quot;</pre>
+
+<p>A documentação será gerada na pasta <code>doc/</code> e poderá ser visualizada abrindo o arquivo <code>doc/index.html</code> em um navegador.</p>
+
+<h2 id="label-M-C3-A9todos+N-C3-A3o+Documentados"><a href="#label-M-C3-A9todos+N-C3-A3o+Documentados">Métodos Não Documentados</a></h2>
+
+<p>Os seguintes controllers possuem apenas a classe documentada, mas não possuem métodos implementados (estão vazios): - <a href="app/controllers/questoes_controller_rb.html">app/controllers/questoes_controller.rb</a> - Controller vazio - <a href="app/controllers/questao_opcoes_controller_rb.html">app/controllers/questao_opcoes_controller.rb</a> - Controller vazio - <a href="app/controllers/materias_controller_rb.html">app/controllers/materias_controller.rb</a> - Controller vazio - <a href="app/controllers/usuario_materias_controller_rb.html">app/controllers/usuario_materias_controller.rb</a> - Controller vazio - <a href="app/controllers/token_senhas_controller_rb.html">app/controllers/token_senhas_controller.rb</a> - Controller vazio</p>
+
+<p>Estes controllers foram deixados sem documentação de métodos pois não possuem implementação.</p>
+
+<h2 id="label-Padr-C3-A3o+de+Documenta-C3-A7-C3-A3o+Utilizado"><a href="#label-Padr-C3-A3o+de+Documenta-C3-A7-C3-A3o+Utilizado">Padrão de Documentação Utilizado</a></h2>
+
+<p>Todos os métodos foram documentados seguindo o padrão RDoc com: - Descrição breve do que o método faz - Documentação de parâmetros (@param) - Documentação de retorno (@return) - Notas sobre efeitos colaterais (@note) quando aplicável</p>
+
+<h2 id="label-Verifica-C3-A7-C3-A3o+da+Documenta-C3-A7-C3-A3o"><a href="#label-Verifica-C3-A7-C3-A3o+da+Documenta-C3-A7-C3-A3o">Verificação da Documentação</a></h2>
+
+<p>Após gerar a documentação HTML, você pode: 1. Abrir <code>doc/index.html</code> no navegador 2. Navegar pelas classes e métodos documentados 3. Verificar se todas as informações estão corretas 4. Identificar métodos que ainda precisam de documentação adicional</p>
+
+</main>
+</body>
+

@@ -1,6 +1,21 @@
-# app/models/formulario.rb
-# VERSÃO SIMPLIFICADA - Apenas campos do ER inicial
-
+# Modelo que representa um formulário de avaliação no sistema CAMAAR.
+#
+# Um formulário é criado a partir de um modelo (template) e pode estar
+# associado a uma matéria específica. Possui período de vigência definido
+# por data_inicio e data_fim, e pode ter diferentes destinatários:
+# todos, discentes, docentes ou matéria específica.
+#
+# @example Criar um novo formulário
+#   formulario = Formulario.new(
+#     titulo: "Avaliação Semestral",
+#     modelo_id: 1,
+#     materia_id: 1,
+#     data_inicio: Date.today,
+#     data_fim: Date.today + 30.days,
+#     destinatario: "discentes",
+#     status: "rascunho",
+#     versao: 1
+#   )
 class Formulario < ApplicationRecord
   # Associações
   belongs_to :usuario
@@ -40,44 +55,79 @@ class Formulario < ApplicationRecord
   scope :ativos, -> { ativo }
   scope :disponiveis, -> { vigente }
   
-  # Métodos de status
+  # Verifica se o formulário está em rascunho.
+  #
+  # @return [Boolean] true se o status for 'rascunho', false caso contrário
   def rascunho?
     status == 'rascunho'
   end
   
+  # Verifica se o formulário está ativo.
+  #
+  # @return [Boolean] true se o status for 'ativo', false caso contrário
   def ativo?
     status == 'ativo'
   end
   
+  # Verifica se o formulário está inativo.
+  #
+  # @return [Boolean] true se o status for 'inativo', false caso contrário
   def inativo?
     status == 'inativo'
   end
   
+  # Verifica se o formulário está encerrado.
+  #
+  # @return [Boolean] true se o status for 'encerrado', false caso contrário
   def encerrado?
     status == 'encerrado'
   end
   
+  # Verifica se o formulário está vigente (ativo e dentro do período).
+  #
+  # @return [Boolean] true se estiver ativo e dentro do período, false caso contrário
   def vigente?
     ativo? && dentro_do_periodo?
   end
   
+  # Alias para vigente?.
+  #
+  # @return [Boolean] true se estiver disponível para resposta, false caso contrário
   def disponivel?
     vigente?
   end
   
+  # Verifica se a data atual está dentro do período do formulário.
+  #
+  # @return [Boolean] true se a data atual estiver entre data_inicio e data_fim, false caso contrário
   def dentro_do_periodo?
     Date.current >= data_inicio && Date.current <= data_fim
   end
   
+  # Verifica se o formulário expirou (data atual é posterior a data_fim).
+  #
+  # @return [Boolean] true se expirado, false caso contrário
   def expirado?
     Date.current > data_fim
   end
   
+  # Verifica se o formulário ainda não iniciou (data atual é anterior a data_inicio).
+  #
+  # @return [Boolean] true se ainda não iniciou, false caso contrário
   def futuro?
     Date.current < data_inicio
   end
   
-  # Métodos auxiliares
+  # Retorna o status do formulário de forma humanizada.
+  # Inclui informações adicionais sobre o período quando aplicável.
+  #
+  # @return [String] status formatado:
+  #   - 'Rascunho' para rascunhos
+  #   - 'Ativo' para formulários ativos e vigentes
+  #   - 'Ativo (Aguardando início)' para formulários ativos mas ainda não iniciados
+  #   - 'Ativo (Expirado)' para formulários ativos mas já expirados
+  #   - 'Inativo' para formulários inativos
+  #   - 'Encerrado' para formulários encerrados
   def status_humanizado
     case status
     when 'rascunho'
@@ -101,6 +151,13 @@ class Formulario < ApplicationRecord
     end
   end
   
+  # Retorna o destinatário do formulário de forma humanizada.
+  #
+  # @return [String] destinatário formatado:
+  #   - 'Todos os usuários' para 'todos'
+  #   - 'Apenas alunos' para 'alunos'
+  #   - 'Apenas professores' para 'professores'
+  #   - 'Alunos da matéria: [nome]' para 'materia'
   def destinatario_humanizado
     case destinatario
     when 'todos'
@@ -116,11 +173,21 @@ class Formulario < ApplicationRecord
     end
   end
   
-  # Alias para compatibilidade com views
+  # Alias para compatibilidade com views.
+  #
+  # @return [String] mesmo valor de destinatario_humanizado
   def destinatarios_humanizado
     destinatario_humanizado
   end
   
+  # Retorna a classe CSS para badge de status do formulário.
+  #
+  # @return [String] classe CSS correspondente ao status:
+  #   - 'badge-secondary' para rascunho
+  #   - 'badge-success' para ativo e vigente
+  #   - 'badge-warning' para ativo mas não vigente
+  #   - 'badge-danger' para inativo
+  #   - 'badge-dark' para encerrado
   def status_badge_class
     case status
     when 'rascunho'
@@ -136,7 +203,10 @@ class Formulario < ApplicationRecord
     end
   end
   
-  # Método para duplicar formulário
+  # Cria uma cópia do formulário como rascunho.
+  #
+  # @return [Formulario] novo formulário duplicado (não salvo no banco)
+  # @note O objeto retornado não está salvo, é necessário chamar save após a duplicação
   def duplicar
     novo_formulario = self.dup
     novo_formulario.titulo = "#{titulo} (Cópia)"
@@ -146,7 +216,10 @@ class Formulario < ApplicationRecord
     novo_formulario
   end
   
-  # Calcular estatísticas
+  # Calcula a taxa de resposta do formulário em percentual.
+  #
+  # @return [Float] percentual de resposta arredondado para 1 casa decimal
+  # @return [Integer] 0 se não houver destinatários
   def taxa_resposta
     total_destinatarios = calcular_total_destinatarios
     return 0 if total_destinatarios == 0
@@ -154,10 +227,21 @@ class Formulario < ApplicationRecord
     (total_respostas_usuarios.to_f / total_destinatarios * 100).round(1)
   end
   
+  # Retorna o total de respostas do formulário.
+  #
+  # @return [Integer] número total de respostas (usuários únicos)
   def total_respostas
     total_respostas_usuarios
   end
   
+  # Calcula o total de destinatários baseado no tipo de destinatário.
+  #
+  # @return [Integer] número total de destinatários:
+  #   - Total de usuários se destinatario for 'todos'
+  #   - Total de alunos se destinatario for 'alunos'
+  #   - Total de professores se destinatario for 'professores'
+  #   - Total de alunos da matéria se destinatario for 'materia'
+  #   - 0 para outros casos
   def calcular_total_destinatarios
     case destinatario
     when 'todos'
@@ -173,11 +257,18 @@ class Formulario < ApplicationRecord
     end
   end
 
+  # Retorna o total de usuários únicos que responderam o formulário.
+  #
+  # @return [Integer] número de usuários distintos que responderam
   def total_respostas_usuarios
     respostas.select(:usuario_id).distinct.count
   end
   
-  # Verificar se usuário pode responder
+  # Verifica se um usuário pode responder o formulário.
+  #
+  # @param usuario [Usuario] usuário a verificar
+  # @return [Boolean] true se o usuário pode responder, false caso contrário
+  # @note Retorna false se o formulário não estiver ativo e vigente
   def pode_responder?(usuario)
     return false unless ativo? && vigente?
     
@@ -191,23 +282,37 @@ class Formulario < ApplicationRecord
     end
   end
   
-  # Alias para compatibilidade
+  # Alias para compatibilidade.
+  #
+  # @param usuario [Usuario] usuário a verificar
+  # @return [Boolean] mesmo valor de pode_responder?
   def disponivel_para?(usuario)
     pode_responder?(usuario)
   end
   
-  # Verificar se usuário já respondeu
+  # Verifica se um usuário já respondeu o formulário.
+  #
+  # @param usuario [Usuario] usuário a verificar
+  # @return [Boolean] true se o usuário já respondeu, false caso contrário
   def ja_respondeu?(usuario)
     respostas.exists?(usuario: usuario)
   end
   
-  # Alias para compatibilidade
+  # Alias para compatibilidade.
+  #
+  # @param usuario [Usuario] usuário a verificar
+  # @return [Boolean] mesmo valor de ja_respondeu?
   def ja_respondido_por?(usuario)
     ja_respondeu?(usuario)
   end
 
-  # metodos de destinatarios
-
+  # Retorna a classe CSS para badge de destinatário.
+  #
+  # @return [String] classe CSS correspondente ao destinatário:
+  #   - 'badge badge-blue' para 'dicentes'
+  #   - 'badge badge-purple' para 'docentes'
+  #   - 'badge badge-green' para 'todos'
+  #   - 'badge badge-gray' para outros casos
   def destinatario_badge_class
   case destinatario
   when 'dicentes'
@@ -221,51 +326,75 @@ class Formulario < ApplicationRecord
   end
 end
 
-def destinatario_icone
-  case destinatario
-  when 'dicentes'
-    '👨‍🎓'
-  when 'docentes'
-    '👨‍🏫'
-  when 'todos'
-    '👥'
-  else
-    '❓'
+  # Retorna o ícone correspondente ao tipo de destinatário.
+  #
+  # @return [String] emoji correspondente:
+  #   - '👨‍🎓' para 'dicentes'
+  #   - '👨‍🏫' para 'docentes'
+  #   - '👥' para 'todos'
+  #   - '❓' para outros casos
+  def destinatario_icone
+    case destinatario
+    when 'dicentes'
+      '👨‍🎓'
+    when 'docentes'
+      '👨‍🏫'
+    when 'todos'
+      '👥'
+    else
+      '❓'
+    end
   end
-end
 
-def destinatario_texto
-  case destinatario
-  when 'dicentes'
-    'Alunos'
-  when 'docentes'
-    'Professores'
-  when 'todos'
-    'Todos'
-  else
-    destinatario.humanize
+  # Retorna o texto correspondente ao tipo de destinatário.
+  #
+  # @return [String] texto formatado:
+  #   - 'Alunos' para 'dicentes'
+  #   - 'Professores' para 'docentes'
+  #   - 'Todos' para 'todos'
+  def destinatario_texto
+    case destinatario
+    when 'dicentes'
+      'Alunos'
+    when 'docentes'
+      'Professores'
+    when 'todos'
+      'Todos'
+    else
+      destinatario.humanize
+    end
   end
-end
 
-def destinatario_humanizado
-  "#{destinatario_icone} #{destinatario_texto}"
-end
-
-def destinatario_descricao
-  case destinatario
-  when 'dicentes'
-    'Este formulário será respondido pelos alunos da turma'
-  when 'docentes'
-    'Este formulário será respondido pelos professores da turma'
-  when 'todos'
-    'Este formulário será respondido por todos os participantes da turma'
-  else
-    'Destinatário não especificado'
+  # Retorna o destinatário formatado com ícone e texto.
+  #
+  # @return [String] destinatário formatado com ícone e texto
+  def destinatario_humanizado
+    "#{destinatario_icone} #{destinatario_texto}"
   end
-end
+
+  # Retorna uma descrição do destinatário do formulário.
+  #
+  # @return [String] descrição explicativa do destinatário
+  def destinatario_descricao
+    case destinatario
+    when 'dicentes'
+      'Este formulário será respondido pelos alunos da turma'
+    when 'docentes'
+      'Este formulário será respondido pelos professores da turma'
+    when 'todos'
+      'Este formulário será respondido por todos os participantes da turma'
+    else
+      'Destinatário não especificado'
+    end
+  end
   
   private
   
+  # Validação customizada: verifica se data_fim é posterior a data_inicio.
+  # Adiciona erro de validação se a data de fim for anterior à data de início.
+  #
+  # @return [void]
+  # @note Efeito colateral: adiciona erro de validação se a condição não for atendida
   def data_fim_deve_ser_maior_que_data_inicio
     return if data_inicio.blank? || data_fim.blank?
     

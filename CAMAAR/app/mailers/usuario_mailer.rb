@@ -1,8 +1,14 @@
-# app/mailers/usuario_mailer.rb
+# Mailer responsável pelo envio de emails relacionados a usuários.
+# Envia convites de cadastro e emails de redefinição de senha.
 class UsuarioMailer < ApplicationMailer
   default from: 'noreply@camaar.unb.br'
   
-  # Email de convite para cadastro (definir senha pela primeira vez)
+  # Envia email de convite para cadastro (definir senha pela primeira vez).
+  #
+  # @param usuario [Usuario] usuário que receberá o convite
+  # @param token [TokenSenha] token de ativação para definir senha
+  # @return [Mail::Message] mensagem de email preparada
+  # @note Efeito colateral: envia email para o usuário com link de ativação
   def convite_cadastro(usuario, token)
     @usuario = usuario
     @token = token
@@ -17,7 +23,12 @@ class UsuarioMailer < ApplicationMailer
     )
   end
   
-  # Email para redefinição de senha
+  # Envia email para redefinição de senha.
+  #
+  # @param usuario [Usuario] usuário que solicitou redefinição
+  # @param token [TokenSenha] token de redefinição
+  # @return [Mail::Message] mensagem de email preparada
+  # @note Efeito colateral: envia email para o usuário com link de redefinição
   def redefinir_senha(usuario, token)
     @usuario = usuario
     @token = token

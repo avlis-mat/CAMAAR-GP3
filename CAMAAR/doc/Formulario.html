@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>class Formulario - CAMAAR - Documentação do Sistema</title>
+
+
+  <meta name="keywords" content="ruby,class,Formulario">
+
+
+    <meta name="description" content="class Formulario: Modelo que representa um formulário de avaliação no sistema CAMAAR. Um formulário é criado a partir de um modelo (template) e pode estar associado a u">
+
+
+
+
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<div id="navigation-toggle" role="button" tabindex="0" aria-label="Toggle sidebar" aria-expanded="true" aria-controls="navigation">
+  <span aria-hidden="true">&#9776;</span>
+</div>
+
+
+<nav id="navigation" role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search (/) for a class, method, ..." spellcheck="false"
+             autocomplete="off"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  
+
+  
+<div id="parent-class-section" class="nav-section">
+  <h3>Ancestors</h3>
+  <ul><li><a href="ApplicationRecord.html">ApplicationRecord</a><ul><li>ActiveRecord::Base</li></ul></li></ul>
+</div>
+
+
+  
+
+  
+
+  
+
+
+  <div class="nav-section">
+    <h3>Instance Methods</h3>
+    <ul class="link-list" role="directory">
+
+      <li ><a href="#method-i-ativo-3F">ativo?</a></li>
+
+      <li ><a href="#method-i-calcular_total_destinatarios">calcular_total_destinatarios</a></li>
+
+      <li ><a href="#method-i-data_fim_deve_ser_maior_que_data_inicio">data_fim_deve_ser_maior_que_data_inicio</a></li>
+
+      <li ><a href="#method-i-dentro_do_periodo-3F">dentro_do_periodo?</a></li>
+
+      <li ><a href="#method-i-destinatario_badge_class">destinatario_badge_class</a></li>
+
+      <li ><a href="#method-i-destinatario_descricao">destinatario_descricao</a></li>
+
+      <li ><a href="#method-i-destinatario_humanizado">destinatario_humanizado</a></li>
+
+      <li ><a href="#method-i-destinatario_icone">destinatario_icone</a></li>
+
+      <li ><a href="#method-i-destinatario_texto">destinatario_texto</a></li>
+
+      <li ><a href="#method-i-destinatarios_humanizado">destinatarios_humanizado</a></li>
+
+      <li ><a href="#method-i-disponivel-3F">disponivel?</a></li>
+
+      <li ><a href="#method-i-disponivel_para-3F">disponivel_para?</a></li>
+
+      <li ><a href="#method-i-duplicar">duplicar</a></li>
+
+      <li ><a href="#method-i-encerrado-3F">encerrado?</a></li>
+
+      <li ><a href="#method-i-expirado-3F">expirado?</a></li>
+
+      <li ><a href="#method-i-futuro-3F">futuro?</a></li>
+
+      <li ><a href="#method-i-inativo-3F">inativo?</a></li>
+
+      <li ><a href="#method-i-ja_respondeu-3F">ja_respondeu?</a></li>
+
+      <li ><a href="#method-i-ja_respondido_por-3F">ja_respondido_por?</a></li>
+
+      <li ><a href="#method-i-pode_responder-3F">pode_responder?</a></li>
+
+      <li ><a href="#method-i-rascunho-3F">rascunho?</a></li>
+
+      <li ><a href="#method-i-status_badge_class">status_badge_class</a></li>
+
+      <li ><a href="#method-i-status_humanizado">status_humanizado</a></li>
+
+      <li ><a href="#method-i-taxa_resposta">taxa_resposta</a></li>
+
+      <li ><a href="#method-i-total_respostas">total_respostas</a></li>
+
+      <li ><a href="#method-i-total_respostas_usuarios">total_respostas_usuarios</a></li>
+
+      <li ><a href="#method-i-vigente-3F">vigente?</a></li>
+
+    </ul>
+  </div>
+
+
+
+  <footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a></p>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.17.0.</p>
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.</p>
+</footer>
+
+</nav>
+
+<main role="main" aria-labelledby="class-Formulario">
+  
+  
+
+  <h1 id="class-Formulario" class="anchor-link class">
+    class Formulario
+  </h1>
+
+  <section class="description">
+    
+<p><a href="Modelo.html"><code>Modelo</code></a> que representa um formulário de avaliação no sistema CAMAAR.</p>
+
+<p>Um formulário é criado a partir de um modelo (template) e pode estar associado a uma matéria específica. Possui período de vigência definido por data_inicio e data_fim, e pode ter diferentes destinatários: todos, discentes, docentes ou matéria específica.</p>
+
+<p>@example Criar um novo formulário</p>
+
+<pre class="ruby"><span class="ruby-identifier">formulario</span> = <span class="ruby-constant">Formulario</span>.<span class="ruby-identifier">new</span>(
+  <span class="ruby-value">titulo:</span> <span class="ruby-string">&quot;Avaliação Semestral&quot;</span>,
+  <span class="ruby-value">modelo_id:</span> <span class="ruby-value">1</span>,
+  <span class="ruby-value">materia_id:</span> <span class="ruby-value">1</span>,
+  <span class="ruby-value">data_inicio:</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>,
+  <span class="ruby-value">data_fim:</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span> <span class="ruby-operator">+</span> <span class="ruby-value">30</span>.<span class="ruby-identifier">days</span>,
+  <span class="ruby-value">destinatario:</span> <span class="ruby-string">&quot;discentes&quot;</span>,
+  <span class="ruby-value">status:</span> <span class="ruby-string">&quot;rascunho&quot;</span>,
+  <span class="ruby-value">versao:</span> <span class="ruby-value">1</span>
+)
+</pre>
+
+  </section>
+
+
+  <section id="5Buntitled-5D" class="documentation-section anchor-link">
+
+
+
+
+
+
+
+
+
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section anchor-link">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+
+      <div id="method-i-ativo-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-ativo-3F" title="Link to this method">
+                <span class="method-name">ativo?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="ativo-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 68</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ativo?</span>
+  <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;ativo&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário está ativo.</p>
+
+<p>@return [Boolean] true se o status for ‘ativo’, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-calcular_total_destinatarios" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-calcular_total_destinatarios" title="Link to this method">
+                <span class="method-name">calcular_total_destinatarios</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="calcular_total_destinatarios-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 245</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">calcular_total_destinatarios</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-constant">Usuario</span>.<span class="ruby-identifier">count</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;alunos&#39;</span>
+    <span class="ruby-constant">Usuario</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">tipo:</span> <span class="ruby-string">&#39;aluno&#39;</span>).<span class="ruby-identifier">count</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;professores&#39;</span>
+    <span class="ruby-constant">Usuario</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">tipo:</span> <span class="ruby-string">&#39;professor&#39;</span>).<span class="ruby-identifier">count</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;materia&#39;</span>
+    <span class="ruby-identifier">materia</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">materia</span>.<span class="ruby-identifier">usuarios</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">tipo:</span> <span class="ruby-string">&#39;aluno&#39;</span>).<span class="ruby-identifier">count</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Calcula o total de destinatários baseado no tipo de destinatário.</p>
+
+<p>@return [Integer] número total de destinatários:</p>
+
+<pre>- Total de usuários se destinatario for &#39;todos&#39;
+- Total de alunos se destinatario for &#39;alunos&#39;
+- Total de professores se destinatario for &#39;professores&#39;
+- Total de alunos da matéria se destinatario for &#39;materia&#39;
+- 0 para outros casos</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-dentro_do_periodo-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-dentro_do_periodo-3F" title="Link to this method">
+                <span class="method-name">dentro_do_periodo?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="dentro_do_periodo-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dentro_do_periodo?</span>
+  <span class="ruby-constant">Date</span>.<span class="ruby-identifier">current</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">data_inicio</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">current</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">data_fim</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se a data atual está dentro do período do formulário.</p>
+
+<p>@return [Boolean] true se a data atual estiver entre data_inicio e data_fim, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatario_badge_class" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatario_badge_class" title="Link to this method">
+                <span class="method-name">destinatario_badge_class</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatario_badge_class-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 316</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatario_badge_class</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;dicentes&#39;</span>
+    <span class="ruby-string">&#39;badge badge-blue&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;docentes&#39;</span>
+    <span class="ruby-string">&#39;badge badge-purple&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-string">&#39;badge badge-green&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&#39;badge badge-gray&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna a classe CSS para badge de destinatário.</p>
+
+<p>@return [String] classe CSS correspondente ao destinatário:</p>
+
+<pre>- &#39;badge badge-blue&#39; para &#39;dicentes&#39;
+- &#39;badge badge-purple&#39; para &#39;docentes&#39;
+- &#39;badge badge-green&#39; para &#39;todos&#39;
+- &#39;badge badge-gray&#39; para outros casos</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatario_descricao" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatario_descricao" title="Link to this method">
+                <span class="method-name">destinatario_descricao</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatario_descricao-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 378</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatario_descricao</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;dicentes&#39;</span>
+    <span class="ruby-string">&#39;Este formulário será respondido pelos alunos da turma&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;docentes&#39;</span>
+    <span class="ruby-string">&#39;Este formulário será respondido pelos professores da turma&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-string">&#39;Este formulário será respondido por todos os participantes da turma&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&#39;Destinatário não especificado&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna uma descrição do destinatário do formulário.</p>
+
+<p>@return [String] descrição explicativa do destinatário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatario_humanizado" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatario_humanizado" title="Link to this method">
+                <span class="method-name">destinatario_humanizado</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatario_humanizado-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatario_humanizado</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-string">&#39;Todos os usuários&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;alunos&#39;</span>
+    <span class="ruby-string">&#39;Apenas alunos&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;professores&#39;</span>
+    <span class="ruby-string">&#39;Apenas professores&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;materia&#39;</span>
+    <span class="ruby-node">&quot;Alunos da matéria: #{materia&amp;.nome || &#39;N/A&#39;}&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">destinatario</span>.<span class="ruby-identifier">humanize</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o destinatário do formulário de forma humanizada.</p>
+
+<p>@return [String] destinatário formatado:</p>
+
+<pre>- &#39;Todos os usuários&#39; para &#39;todos&#39;
+- &#39;Apenas alunos&#39; para &#39;alunos&#39;
+- &#39;Apenas professores&#39; para &#39;professores&#39;
+- &#39;Alunos da matéria: [nome]&#39; para &#39;materia&#39;</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatario_icone" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatario_icone" title="Link to this method">
+                <span class="method-name">destinatario_icone</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatario_icone-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 336</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatario_icone</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;dicentes&#39;</span>
+    <span class="ruby-string">&#39;👨‍🎓&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;docentes&#39;</span>
+    <span class="ruby-string">&#39;👨‍🏫&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-string">&#39;👥&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&#39;❓&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o ícone correspondente ao tipo de destinatário.</p>
+
+<p>@return [String] emoji correspondente:</p>
+
+<pre>- &#39;👨‍🎓&#39; para &#39;dicentes&#39;
+- &#39;👨‍🏫&#39; para &#39;docentes&#39;
+- &#39;👥&#39; para &#39;todos&#39;
+- &#39;❓&#39; para outros casos</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatario_texto" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatario_texto" title="Link to this method">
+                <span class="method-name">destinatario_texto</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatario_texto-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 355</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatario_texto</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;dicentes&#39;</span>
+    <span class="ruby-string">&#39;Alunos&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;docentes&#39;</span>
+    <span class="ruby-string">&#39;Professores&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-string">&#39;Todos&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">destinatario</span>.<span class="ruby-identifier">humanize</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o texto correspondente ao tipo de destinatário.</p>
+
+<p>@return [String] texto formatado:</p>
+
+<pre>- &#39;Alunos&#39; para &#39;dicentes&#39;
+- &#39;Professores&#39; para &#39;docentes&#39;
+- &#39;Todos&#39; para &#39;todos&#39;</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-destinatarios_humanizado" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-destinatarios_humanizado" title="Link to this method">
+                <span class="method-name">destinatarios_humanizado</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="destinatarios_humanizado-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 179</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">destinatarios_humanizado</span>
+  <span class="ruby-identifier">destinatario_humanizado</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Alias para compatibilidade com views.</p>
+
+<p>@return [String] mesmo valor de <a href="Formulario.html#method-i-destinatario_humanizado"><code>destinatario_humanizado</code></a></p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-disponivel-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-disponivel-3F" title="Link to this method">
+                <span class="method-name">disponivel?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="disponivel-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">disponivel?</span>
+  <span class="ruby-identifier">vigente?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Alias para vigente?.</p>
+
+<p>@return [Boolean] true se estiver disponível para resposta, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-disponivel_para-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-disponivel_para-3F" title="Link to this method">
+                <span class="method-name">disponivel_para?</span>
+                <span class="method-args">(usuario)</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="disponivel_para-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 289</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">disponivel_para?</span>(<span class="ruby-identifier">usuario</span>)
+  <span class="ruby-identifier">pode_responder?</span>(<span class="ruby-identifier">usuario</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Alias para compatibilidade.</p>
+
+<p>@param usuario [Usuario] usuário a verificar @return [Boolean] mesmo valor de pode_responder?</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-duplicar" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-duplicar" title="Link to this method">
+                <span class="method-name">duplicar</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="duplicar-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 210</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">duplicar</span>
+  <span class="ruby-identifier">novo_formulario</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-identifier">novo_formulario</span>.<span class="ruby-identifier">titulo</span> = <span class="ruby-node">&quot;#{titulo} (Cópia)&quot;</span>
+  <span class="ruby-identifier">novo_formulario</span>.<span class="ruby-identifier">status</span> = <span class="ruby-string">&#39;rascunho&#39;</span>
+  <span class="ruby-identifier">novo_formulario</span>.<span class="ruby-identifier">versao</span> = <span class="ruby-value">1</span>
+  <span class="ruby-identifier">novo_formulario</span>.<span class="ruby-identifier">agrupamento</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">novo_formulario</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Cria uma cópia do formulário como rascunho.</p>
+
+<p>@return [Formulario] novo formulário duplicado (não salvo no banco) @note O objeto retornado não está salvo, é necessário chamar save após a duplicação</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-encerrado-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-encerrado-3F" title="Link to this method">
+                <span class="method-name">encerrado?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="encerrado-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">encerrado?</span>
+  <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;encerrado&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário está encerrado.</p>
+
+<p>@return [Boolean] true se o status for ‘encerrado’, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-expirado-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-expirado-3F" title="Link to this method">
+                <span class="method-name">expirado?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="expirado-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">expirado?</span>
+  <span class="ruby-constant">Date</span>.<span class="ruby-identifier">current</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data_fim</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário expirou (data atual é posterior a data_fim).</p>
+
+<p>@return [Boolean] true se expirado, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-futuro-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-futuro-3F" title="Link to this method">
+                <span class="method-name">futuro?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="futuro-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 117</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">futuro?</span>
+  <span class="ruby-constant">Date</span>.<span class="ruby-identifier">current</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">data_inicio</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário ainda não iniciou (data atual é anterior a data_inicio).</p>
+
+<p>@return [Boolean] true se ainda não iniciou, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-inativo-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-inativo-3F" title="Link to this method">
+                <span class="method-name">inativo?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="inativo-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inativo?</span>
+  <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;inativo&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário está inativo.</p>
+
+<p>@return [Boolean] true se o status for ‘inativo’, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-ja_respondeu-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-ja_respondeu-3F" title="Link to this method">
+                <span class="method-name">ja_respondeu?</span>
+                <span class="method-args">(usuario)</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="ja_respondeu-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 297</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ja_respondeu?</span>(<span class="ruby-identifier">usuario</span>)
+  <span class="ruby-identifier">respostas</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value">usuario:</span> <span class="ruby-identifier">usuario</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se um usuário já respondeu o formulário.</p>
+
+<p>@param usuario [Usuario] usuário a verificar @return [Boolean] true se o usuário já respondeu, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-ja_respondido_por-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-ja_respondido_por-3F" title="Link to this method">
+                <span class="method-name">ja_respondido_por?</span>
+                <span class="method-args">(usuario)</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="ja_respondido_por-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 305</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">ja_respondido_por?</span>(<span class="ruby-identifier">usuario</span>)
+  <span class="ruby-identifier">ja_respondeu?</span>(<span class="ruby-identifier">usuario</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Alias para compatibilidade.</p>
+
+<p>@param usuario [Usuario] usuário a verificar @return [Boolean] mesmo valor de ja_respondeu?</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-pode_responder-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-pode_responder-3F" title="Link to this method">
+                <span class="method-name">pode_responder?</span>
+                <span class="method-args">(usuario)</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="pode_responder-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 272</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">pode_responder?</span>(<span class="ruby-identifier">usuario</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">ativo?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">vigente?</span>
+  
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">destinatario</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;todos&#39;</span>
+    <span class="ruby-identifier">usuario</span>.<span class="ruby-identifier">materias</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">materia</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;discentes&#39;</span>
+    <span class="ruby-identifier">usuario</span>.<span class="ruby-identifier">aluno?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">usuario</span>.<span class="ruby-identifier">materias</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">materia</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;docentes&#39;</span>
+    <span class="ruby-identifier">usuario</span>.<span class="ruby-identifier">professor?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">usuario</span>.<span class="ruby-identifier">materias</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">materia</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se um usuário pode responder o formulário.</p>
+
+<p>@param usuario [Usuario] usuário a verificar @return [Boolean] true se o usuário pode responder, false caso contrário @note Retorna false se o formulário não estiver ativo e vigente</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-rascunho-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-rascunho-3F" title="Link to this method">
+                <span class="method-name">rascunho?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="rascunho-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rascunho?</span>
+  <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;rascunho&#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário está em rascunho.</p>
+
+<p>@return [Boolean] true se o status for ‘rascunho’, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-status_badge_class" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-status_badge_class" title="Link to this method">
+                <span class="method-name">status_badge_class</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="status_badge_class-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">status_badge_class</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">status</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;rascunho&#39;</span>
+    <span class="ruby-string">&#39;badge-secondary&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ativo&#39;</span>
+    <span class="ruby-identifier">vigente?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&#39;badge-success&#39;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&#39;badge-warning&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;inativo&#39;</span>
+    <span class="ruby-string">&#39;badge-danger&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;encerrado&#39;</span>
+    <span class="ruby-string">&#39;badge-dark&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&#39;badge-secondary&#39;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna a classe CSS para badge de status do formulário.</p>
+
+<p>@return [String] classe CSS correspondente ao status:</p>
+
+<pre>- &#39;badge-secondary&#39; para rascunho
+- &#39;badge-success&#39; para ativo e vigente
+- &#39;badge-warning&#39; para ativo mas não vigente
+- &#39;badge-danger&#39; para inativo
+- &#39;badge-dark&#39; para encerrado</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-status_humanizado" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-status_humanizado" title="Link to this method">
+                <span class="method-name">status_humanizado</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="status_humanizado-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 131</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">status_humanizado</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">status</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;rascunho&#39;</span>
+    <span class="ruby-string">&#39;Rascunho&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;ativo&#39;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">vigente?</span>
+      <span class="ruby-string">&#39;Ativo&#39;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">futuro?</span>
+      <span class="ruby-string">&#39;Ativo (Aguardando início)&#39;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">expirado?</span>
+      <span class="ruby-string">&#39;Ativo (Expirado)&#39;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-string">&#39;Ativo&#39;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;inativo&#39;</span>
+    <span class="ruby-string">&#39;Inativo&#39;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;encerrado&#39;</span>
+    <span class="ruby-string">&#39;Encerrado&#39;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">status</span>.<span class="ruby-identifier">humanize</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o status do formulário de forma humanizada. Inclui informações adicionais sobre o período quando aplicável.</p>
+
+<p>@return [String] status formatado:</p>
+
+<pre>- &#39;Rascunho&#39; para rascunhos
+- &#39;Ativo&#39; para formulários ativos e vigentes
+- &#39;Ativo (Aguardando início)&#39; para formulários ativos mas ainda não iniciados
+- &#39;Ativo (Expirado)&#39; para formulários ativos mas já expirados
+- &#39;Inativo&#39; para formulários inativos
+- &#39;Encerrado&#39; para formulários encerrados</pre>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-taxa_resposta" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-taxa_resposta" title="Link to this method">
+                <span class="method-name">taxa_resposta</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="taxa_resposta-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">taxa_resposta</span>
+  <span class="ruby-identifier">total_destinatarios</span> = <span class="ruby-identifier">calcular_total_destinatarios</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">total_destinatarios</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+  
+  (<span class="ruby-identifier">total_respostas_usuarios</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">total_destinatarios</span> <span class="ruby-operator">*</span> <span class="ruby-value">100</span>).<span class="ruby-identifier">round</span>(<span class="ruby-value">1</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Calcula a taxa de resposta do formulário em percentual.</p>
+
+<p>@return [Float] percentual de resposta arredondado para 1 casa decimal @return [Integer] 0 se não houver destinatários</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-total_respostas" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-total_respostas" title="Link to this method">
+                <span class="method-name">total_respostas</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="total_respostas-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 233</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_respostas</span>
+  <span class="ruby-identifier">total_respostas_usuarios</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o total de respostas do formulário.</p>
+
+<p>@return [Integer] número total de respostas (usuários únicos)</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-total_respostas_usuarios" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-total_respostas_usuarios" title="Link to this method">
+                <span class="method-name">total_respostas_usuarios</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="total_respostas_usuarios-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 263</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_respostas_usuarios</span>
+  <span class="ruby-identifier">respostas</span>.<span class="ruby-identifier">select</span>(<span class="ruby-value">:usuario_id</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Retorna o total de usuários únicos que responderam o formulário.</p>
+
+<p>@return [Integer] número de usuários distintos que responderam</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+      <div id="method-i-vigente-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-vigente-3F" title="Link to this method">
+                <span class="method-name">vigente?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="vigente-3F-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">vigente?</span>
+  <span class="ruby-identifier">ativo?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">dentro_do_periodo?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Verifica se o formulário está vigente (ativo e dentro do período).</p>
+
+<p>@return [Boolean] true se estiver ativo e dentro do período, false caso contrário</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+    </section>
+
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section anchor-link">
+       <header>
+         <h3>Private Instance Methods</h3>
+       </header>
+
+
+      <div id="method-i-data_fim_deve_ser_maior_que_data_inicio" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-data_fim_deve_ser_maior_que_data_inicio" title="Link to this method">
+                <span class="method-name">data_fim_deve_ser_maior_que_data_inicio</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+
+
+
+        <div class="method-description">
+
+          <div class="method-source-code" id="data_fim_deve_ser_maior_que_data_inicio-source">
+            <pre><span class="ruby-comment"># File app/models/formulario.rb, line 398</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">data_fim_deve_ser_maior_que_data_inicio</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">data_inicio</span>.<span class="ruby-identifier">blank?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">data_fim</span>.<span class="ruby-identifier">blank?</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">data_fim</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">data_inicio</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:data_fim</span>, <span class="ruby-string">&#39;deve ser posterior à data de início&#39;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+          <p>Validação customizada: verifica se data_fim é posterior a data_inicio. Adiciona erro de validação se a data de fim for anterior à data de início.</p>
+
+<p>@return [void] @note Efeito colateral: adiciona erro de validação se a condição não for atendida</p>
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+    </section>
+
+  </section>
+
+</main>
+</body>
+

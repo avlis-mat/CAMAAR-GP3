@@ -1,10 +1,22 @@
-# app/controllers/usuarios_controller.rb
+# Controller responsável pelo gerenciamento de usuários do sistema.
+# Permite criar, editar, visualizar usuários e gerenciar convites de cadastro.
 class UsuariosController < ApplicationController
   before_action :require_login, except: [:definir_senha, :salvar_senha, :redefinir_senha, :enviar_redefinicao, :resetar_senha, :salvar_nova_senha]
   before_action :require_admin, only: [:index, :new, :create, :edit, :update, :enviar_convite, :enviar_convites_lote]
   before_action :set_usuario, only: [:show, :edit, :update, :enviar_convite]
   
-  # GET /usuarios
+  # Lista todos os usuários do sistema com paginação e filtros.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @return [void]
+  # @note Define variáveis de instância:
+  #   - @usuarios: lista paginada de usuários (20 por página)
+  #   - @usuarios_pendentes: contador de usuários pendentes
+  #   - @usuarios_ativos: contador de usuários ativos
+  # @note Filtros disponíveis via params:
+  #   - status: filtra por status (pendente, ativo, inativo)
+  #   - tipo: filtra por tipo (administrador, aluno, professor)
+  #   - busca: busca por nome, email ou matrícula
   def index
     @usuarios = Usuario.order(created_at: :desc).page(params[:page]).per(20)
     
@@ -29,18 +41,38 @@ class UsuariosController < ApplicationController
     @usuarios_ativos = Usuario.where(status: 'ativo').count
   end
   
-  # GET /usuarios/:id
+  # Exibe os detalhes de um usuário específico.
+  #
+  # @return [void]
+  # @note Define variáveis de instância:
+  #   - @usuario: usuário a ser exibido (definido por set_usuario)
+  #   - @turmas: matérias associadas ao usuário
+  #   - @formularios_respondidos: contador de formulários respondidos pelo usuário
   def show
     @turmas = @usuario.materias.order(:codigo)
     @formularios_respondidos = @usuario.respostas.select(:formulario_id).distinct.count
   end
   
-  # GET /usuarios/new
+  # Exibe formulário para criação de novo usuário.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @return [void]
+  # @note Define variável de instância:
+  #   - @usuario: novo objeto Usuario
   def new
     @usuario = Usuario.new
   end
   
-  # POST /usuarios
+  # Cria um novo usuário e envia convite de cadastro por email.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Cria novo registro de usuário no banco de dados
+  #   - Define senha temporária aleatória
+  #   - Envia email de convite para cadastro
+  #   - Redireciona para usuarios_path em caso de sucesso
+  #   - Renderiza :new em caso de erro
   def create
     @usuario = Usuario.new(usuario_params)
     @usuario.status = 'pendente'
@@ -58,7 +90,16 @@ class UsuariosController < ApplicationController
     end
   end
   
-  # POST /usuarios/:id/enviar_convite
+  # Envia convite de cadastro para um usuário específico.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Invalida tokens de ativação anteriores do usuário
+  #   - Cria novo token de ativação
+  #   - Envia email de convite
+  #   - Atualiza status do usuário para 'pendente'
+  #   - Redireciona para usuarios_path
   def enviar_convite
     if @usuario.status == 'ativo'
       redirect_to usuarios_path, alert: "Este usuário já possui cadastro ativo"
@@ -76,7 +117,14 @@ class UsuariosController < ApplicationController
     end
   end
   
-  # POST /usuarios/enviar_convites_lote
+  # Envia convites de cadastro para múltiplos usuários em lote.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @param usuario_ids [Array<Integer>] array de IDs dos usuários selecionados
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Envia convites para todos os usuários pendentes selecionados
+  #   - Redireciona para usuarios_path com mensagem de sucesso
   def enviar_convites_lote
     usuario_ids = params[:usuario_ids] || []
     
@@ -97,7 +145,16 @@ class UsuariosController < ApplicationController
     redirect_to usuarios_path, notice: "#{enviados} convites enviados com sucesso"
   end
   
-  # GET /definir_senha/:token
+  # Exibe formulário para definição de senha inicial usando token de ativação.
+  # Não requer autenticação.
+  #
+  # @param token [String] token de ativação recebido por email
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Redireciona para login_path se token inválido ou expirado
+  #   - Define variáveis de instância:
+  #     - @token: token de ativação encontrado
+  #     - @usuario: usuário associado ao token
   def definir_senha
     @token = TokenSenha.find_by(token: params[:token], tipo: 'ativacao')
 
@@ -116,7 +173,19 @@ class UsuariosController < ApplicationController
     end
   end
   
-  # POST /definir_senha/:token
+  # Processa a definição de senha inicial do usuário.
+  # Não requer autenticação.
+  #
+  # @param token [String] token de ativação recebido por email
+  # @param senha [String] nova senha do usuário
+  # @param confirmacao_senha [String] confirmação da senha
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Valida senha (mínimo 6 caracteres, deve coincidir com confirmação)
+  #   - Atualiza senha e status do usuário para 'ativo'
+  #   - Marca token como usado
+  #   - Redireciona para login_path em caso de sucesso
+  #   - Renderiza :definir_senha em caso de erro
   def salvar_senha
     @token = TokenSenha.find_by(token: params[:token], tipo: 'ativacao')
     
@@ -156,12 +225,25 @@ class UsuariosController < ApplicationController
     end
   end
   
-  # GET /redefinir_senha
+  # Exibe formulário para solicitar redefinição de senha.
+  # Não requer autenticação.
+  #
+  # @return [void]
   def redefinir_senha
     # Página para solicitar redefinição
   end
   
-  # POST /redefinir_senha
+  # Processa solicitação de redefinição de senha e envia email com token.
+  # Não requer autenticação.
+  #
+  # @param identificacao [String] email ou matrícula do usuário
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Busca usuário por email ou matrícula
+  #   - Cria token de redefinição
+  #   - Envia email com link de redefinição
+  #   - Redireciona para login_path em caso de sucesso
+  #   - Renderiza :redefinir_senha em caso de erro
   def enviar_redefinicao
     identificacao = params[:identificacao] # email ou matrícula
     
@@ -194,7 +276,16 @@ class UsuariosController < ApplicationController
     end
   end
   
-  # GET /resetar_senha/:token
+  # Exibe formulário para redefinir senha usando token de redefinição.
+  # Não requer autenticação.
+  #
+  # @param token [String] token de redefinição recebido por email
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Redireciona para redefinir_senha_path se token inválido ou expirado
+  #   - Define variáveis de instância:
+  #     - @token: token de redefinição encontrado
+  #     - @usuario: usuário associado ao token
   def resetar_senha
     @token = TokenSenha.find_by(token: params[:token], tipo: 'redefinicao')
     
@@ -206,7 +297,19 @@ class UsuariosController < ApplicationController
     @usuario = @token.usuario
   end
   
-  # POST /resetar_senha/:token
+  # Processa a redefinição de senha do usuário.
+  # Não requer autenticação.
+  #
+  # @param token [String] token de redefinição recebido por email
+  # @param senha [String] nova senha do usuário
+  # @param confirmacao_senha [String] confirmação da senha
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Valida senha (mínimo 6 caracteres, deve coincidir com confirmação)
+  #   - Atualiza senha do usuário
+  #   - Marca token como usado
+  #   - Redireciona para login_path em caso de sucesso
+  #   - Renderiza :resetar_senha em caso de erro
   def salvar_nova_senha
     @token = TokenSenha.find_by(token: params[:token], tipo: 'redefinicao')
     
@@ -246,12 +349,24 @@ class UsuariosController < ApplicationController
     end
   end
 
-  # GET /usuarios/:id/edit
-    def edit
+  # Exibe formulário para edição de um usuário existente.
+  # Apenas administradores podem acessar esta ação.
+  #
+  # @return [void]
+  # @note Define variável de instância:
+  #   - @usuario: usuário a ser editado (definido por set_usuario)
+  def edit
     # @usuario já setado pelo before_action
     end
 
-    # PATCH/PUT /usuarios/:id
+    # Atualiza os dados de um usuário existente.
+    # Apenas administradores podem acessar esta ação.
+    #
+    # @return [void]
+    # @note Efeito colateral:
+    #   - Atualiza registro do usuário no banco de dados
+    #   - Redireciona para @usuario em caso de sucesso
+    #   - Renderiza :edit em caso de erro
     def update
         if @usuario.update(usuario_params)
             redirect_to @usuario, notice: "Usuário atualizado com sucesso"
@@ -260,6 +375,12 @@ class UsuariosController < ApplicationController
         end
     end
   
+    # Ativa um usuário, alterando seu status para 'ativo'.
+    #
+    # @return [void]
+    # @note Efeito colateral:
+    #   - Atualiza status do usuário para 'ativo' no banco de dados
+    #   - Redireciona para usuarios_path
     def ativar
     @usuario = Usuario.find(params[:id])
     if @usuario.update(status: 'ativo')
@@ -269,6 +390,12 @@ class UsuariosController < ApplicationController
     end
   end
 
+  # Desativa um usuário, alterando seu status para 'inativo'.
+  #
+  # @return [void]
+  # @note Efeito colateral:
+  #   - Atualiza status do usuário para 'inativo' no banco de dados
+  #   - Redireciona para usuarios_path
   def desativar
     @usuario = Usuario.find(params[:id])
     if @usuario.update(status: 'inativo')
@@ -291,6 +418,14 @@ class UsuariosController < ApplicationController
     params.require(:usuario).permit(:nome, :email, :matricula, :tipo, :departamento)
   end
   
+  # Envia convite de cadastro para um usuário específico.
+  # Cria token de ativação e envia email.
+  #
+  # @param usuario [Usuario] usuário para o qual enviar o convite
+  # @return [Boolean] true se o convite foi enviado com sucesso, false caso contrário
+  # @note Efeito colateral:
+  #   - Cria novo token de ativação para o usuário
+  #   - Envia email de convite via UsuarioMailer
   def enviar_convite_para_usuario(usuario)
     # Criar token de ativação
     token = usuario.token_senhas.create!(tipo: 'ativacao')

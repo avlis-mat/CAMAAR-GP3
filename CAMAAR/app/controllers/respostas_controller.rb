@@ -1,3 +1,5 @@
+# Controller responsável pelo gerenciamento de respostas aos formulários.
+# Permite que usuários respondam formulários e que administradores visualizem resultados.
 class RespostasController < ApplicationController
   
   before_action :require_login
