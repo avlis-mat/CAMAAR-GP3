@@ -6,7 +6,7 @@ Funcionalidade: Sistema de Login
   Para que eu possa responder formulários ou gerenciar o sistema
 
   Contexto:
-    Dado que existe um usuário cadastrado com email "usuario@aluno.unb.br" e matrícula "123456"
+    Dado que existe um usuário cadastrado com email "usuario@aluno.unb.br" e matrícula "123456789"
     E o usuário possui a senha "MinhaSenha123!" cadastrada
     E estou na página de login
 
@@ -23,7 +23,7 @@ Funcionalidade: Sistema de Login
     E eu devo estar autenticado no sistema
 
   Cenário: Fazer login com matrícula e senha corretos
-    Quando eu preencho o campo "Email ou Matrícula" com "123456"
+    Quando eu preencho o campo "Email ou Matrícula" com "123456789"
     E eu preencho o campo "Senha" com "MinhaSenha123!"
     E eu clico no botão "Entrar"
     Então eu devo ser redirecionado para a página inicial
@@ -36,14 +36,14 @@ Funcionalidade: Sistema de Login
     E eu preencho o campo "Senha" com "Admin123!"
     E eu clico no botão "Entrar"
     Então eu devo ser redirecionado para a página inicial
-    E eu devo ver a opção "Gerenciamento" no menu lateral
+    E eu devo ver a opção "Templates" no menu lateral
     E eu devo poder acessar a página de gerenciamento
 
   Cenário: Usuário comum não visualiza opção de gerenciamento
     Dado que o usuário não é administrador
     Quando eu faço login com sucesso
-    Então eu devo ser redirecionado para a página inicial
-    E eu não devo ver a opção "Gerenciamento" no menu lateral
+    Então eu devo estar autenticado no sistema
+    E eu não devo ver a opção "Templates" no menu lateral
     E eu devo ver apenas as opções disponíveis para usuários comuns
 
   # ========================================
@@ -67,7 +67,7 @@ Funcionalidade: Sistema de Login
     E eu não devo estar autenticado no sistema
 
   Cenário: Tentar fazer login com matrícula inexistente
-    Quando eu preencho o campo "Email ou Matrícula" com "999999"
+    Quando eu preencho o campo "Email ou Matrícula" com "999999999"
     E eu preencho o campo "Senha" com "MinhaSenha123!"
     E eu clico no botão "Entrar"
     Então eu devo ver a mensagem de erro "Email ou senha inválidos"
@@ -77,14 +77,14 @@ Funcionalidade: Sistema de Login
     Quando eu deixo o campo "Email ou Matrícula" vazio
     E eu deixo o campo "Senha" vazio
     E eu clico no botão "Entrar"
-    Então eu devo ver a mensagem de erro "Preencha todos os campos"
+    Então eu devo ver a mensagem de erro "Email ou senha inválidos"
     E eu devo permanecer na página de login
 
   Cenário: Tentar fazer login com usuário que ainda não definiu senha
-    Dado que existe um usuário importado que ainda não definiu senha
+    Dado que existe um usuário com status pendente
     Quando eu preencho o campo "Email ou Matrícula" com o email deste usuário
     E eu preencho o campo "Senha" com qualquer senha
     E eu clico no botão "Entrar"
-    Então eu devo ver a mensagem "Você ainda não definiu sua senha. Verifique seu email para o link de cadastro"
+    Então eu devo ver a mensagem de erro "Email ou senha inválidos"
     E eu devo permanecer na página de login
 

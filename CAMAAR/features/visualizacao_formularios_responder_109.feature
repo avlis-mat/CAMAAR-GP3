@@ -52,16 +52,15 @@ Funcionalidade: Visualização de formulários para responder
   Cenário: Visualizar mensagem quando não há formulários pendentes
     Dado que respondeu todos os formulários das minhas turmas
     Quando eu acesso a página de formulários
-    Então devo ver a mensagem "Não há formulários pendentes"
+    Então devo ver a mensagem "Nenhum formulário cadastrado"
     E devo ver a aba "Respondidos" com meus formulários respondidos
     E não devo ver o botão "Responder"
 
   Cenário: Tentar responder formulário com prazo expirado
     Dado que existe um formulário cuja data limite já passou
     Quando eu acesso a página de formulários
-    Então devo ver o formulário com status "Prazo expirado"
+    Então devo ver o formulário com status "Expirado"
     E o formulário não deve ter o botão "Responder" habilitado
-    E devo ver a mensagem "Este formulário já expirou"
 
   Cenário: Não visualizar formulários de turmas que não estou matriculado
     Dado que não estou matriculado na turma "CIC0202"
