@@ -50,14 +50,14 @@ Funcionalidade: Redefinição de senha
     Quando eu clico no link "Esqueci minha senha"
     E eu preencho o campo de email com "email_inexistente@aluno.unb.br"
     E eu clico no botão "Enviar solicitação"
-    Então eu devo ver a mensagem "Email não encontrado no sistema"
+    Então eu devo ver a mensagem "Email ou matrícula não encontrada no sistema"
     E nenhum email deve ser enviado
 
   Cenário: Tentar redefinir senha com token inválido
     Dado que recebi um link de redefinição de senha
     Quando eu acesso um link com token inválido ou expirado
-    Então eu devo ver a mensagem "Link inválido ou expirado. Solicite uma nova redefinição de senha"
-    E eu devo ser redirecionado para a página de solicitação de redefinição
+    Então eu devo ver a mensagem "Link inválido ou expirado. Solicite um novo convite de cadastro"
+    E eu devo ser redirecionado para a página de login
 
   Cenário: Tentar redefinir senha com senhas não coincidentes
     Dado que recebi o email com o link de redefinição
@@ -80,6 +80,6 @@ Funcionalidade: Redefinição de senha
   Cenário: Tentar usar link de redefinição expirado
     Dado que solicitei a redefinição de senha há mais de 24 horas
     Quando eu clico no link de redefinição no email
-    Então eu devo ver a mensagem "Link expirado. Solicite uma nova redefinição de senha"
+    Então eu devo ver a mensagem "Link inválido ou expirado. Solicite uma nova redefinição de senha"
     E eu devo ser redirecionado para a página de solicitação de redefinição
 

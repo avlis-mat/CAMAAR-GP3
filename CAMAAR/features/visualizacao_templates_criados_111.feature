@@ -44,7 +44,7 @@ Funcionalidade: Visualização dos templates criados
   Cenário: Visualizar templates quando não há nenhum criado
     Dado que não existem templates criados no sistema
     Quando eu acesso a página de gerenciamento de templates
-    Então devo ver a mensagem "Nenhum template encontrado"
+    Então devo ver a mensagem "Nenhum template cadastrado"
     E devo ver a opção "Criar Novo Template"
     E a lista de templates deve estar vazia
 

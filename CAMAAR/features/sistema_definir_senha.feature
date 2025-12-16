@@ -76,7 +76,7 @@ Funcionalidade: Sistema de definição de senha
   Cenário: Tentar usar link de definição de senha expirado
     Dado que recebi o email de convite há mais de 48 horas
     Quando eu clico no link de definição de senha no email
-    Então eu devo ver a mensagem "Link expirado. Solicite um novo convite de cadastro"
+    Então eu devo ver a mensagem "Link inválido ou expirado. Solicite um novo convite de cadastro"
     E eu devo ser redirecionado para uma página informando que preciso solicitar novo convite
 
   Cenário: Tentar definir senha para usuário que já possui senha
