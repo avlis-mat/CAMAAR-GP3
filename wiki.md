@@ -959,3 +959,35 @@ fix: Corrige enunciado do cenário de múltipla escolha - Issue #13
 | **TOTAL** | | | **86** | **100%** |
 
 ---
+
+# Sprint 3 - Sistema CAMAAR
+
+## 🎯 Objetivo da Sprint
+
+**Foco:** Refatoração e documentação do código seguindo as melhores práticas de qualidade.
+
+## 📊 Métricas de Qualidade
+
+### Complexidade Ciclomática
+- **Ferramenta:** Saikuro
+- **Meta:** < 10 por método
+- **Status:** Métodos refatorados para atender o limite
+
+### ABC Score
+- **Ferramenta:** RubyCritic
+- **Meta:** < 20 por método
+- **Status:** Métodos refatorados para atender o limite
+
+### Cobertura de Testes
+- **Ferramenta:** SimpleCov
+- **Meta:** > 90% em controllers e models
+- **Status:** Cobertura acima de 90% alcançada
+
+### Testes BDD
+- **Status:** Happy Path e Sad Path implementados em todas as features do Cucumber/RSpec
+
+### Documentação
+- **Ferramenta:** RDoc
+- **Status:** Métodos documentados com descrição, parâmetros, retorno e efeitos colaterais
+
+---
